@@ -1,0 +1,11 @@
+{
+  "name": "allyhub",
+  "owner": { "name": "AllyHub", "url": "https://allyhub.com" },
+  "plugins": [
+    {
+      "name": "allyhub",
+      "source": "./plugins/allyhub",
+      "description": "Videos, docs, sheets and 3D sceneries as code, with AllyHub's editors beside the conversation."
+    }
+  ]
+}

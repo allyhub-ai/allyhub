@@ -1,0 +1,8 @@
+{
+  "name": "allyhub",
+  "displayName": "AllyHub",
+  "description": "Content as code: videos, docs, sheets and 3D sceneries written in a project folder, checked, previewed and rendered on this computer, with AllyHub's editors beside the conversation.",
+  "author": { "name": "AllyHub", "url": "https://allyhub.com" },
+  "homepage": "https://allyhub.com",
+  "keywords": ["video", "docs", "sheets", "3d", "content"]
+}
