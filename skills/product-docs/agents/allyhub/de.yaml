@@ -1,0 +1,3 @@
+display_name: "Produktdoku"
+short_description: "Die Doku eines Features, mit annotierten Screens"
+default_prompt: "Nutze den Skill product-docs: Schreib die Doku zu [dem Feature, mit Link]."

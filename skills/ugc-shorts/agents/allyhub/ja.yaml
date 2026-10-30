@@ -1,0 +1,3 @@
+display_name: "UGC ショート"
+short_description: "3D の部屋でスマホ撮影したような、ひとつの機能"
+default_prompt: "ugc-shorts スキルを使って：[機能とそのリンク] を、スマホで撮ったようなショート動画にしてください。"

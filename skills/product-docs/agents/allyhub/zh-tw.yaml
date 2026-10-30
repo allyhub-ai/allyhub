@@ -1,0 +1,3 @@
+display_name: "產品文件"
+short_description: "一個功能的產品文件，配帶標註的介面圖"
+default_prompt: "使用 product-docs 技能：為[功能及其連結]寫產品文件。"

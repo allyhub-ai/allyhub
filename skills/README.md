@@ -1,11 +1,11 @@
 # AllyHub's skills
 
-Each folder here is an [Agent Skill](https://agentskills.io/specification): a `SKILL.md` with its front matter, and the files it reads. Every one is bundled with the CLI and published with it.
+Each folder here is an [Agent Skill](https://agentskills.io/specification): a `SKILL.md` with its front matter, and the files it reads. They are published from the public repository, `allyhub-ai/allyhub` ([distribution.md](../../docs/distribution.md)).
 
-- `allyhub` is AllyHub itself: how to run it, the project and its skills, the contract, the piece API. It is the one skill installed for every folder (`npx skills add allyhub-ai/skills --skill allyhub -g`, `allyhub skill install --global`, or AllyHub Studio), and its description covers every kind of work, so an agent reads it whatever is asked.
-- The others are **work skills**: each says how to make one kind of work in an AllyHub project (a demo film, an explainer, a round of research). A work skill is the project's: it is installed into the project as the skills CLI installs one with project scope, in `.agents/skills/<name>` with a link in `.claude/skills/<name>` (`allyhub skill add <name>`, `allyhub new <folder> --skill <name>`, Studio's gallery), never for every folder. The agent loads it the standard way; nothing of it is copied anywhere else in the project.
+- `allyhub` is AllyHub itself, kept short and general: what AllyHub is good at, that `allyhub help` is the reference for the commands and the SDK's docs, and that `allyhub skills` lists the work skills (`allyhub skills show <name>` prints one, `allyhub add <name>` adds it), never naming them one by one. It is the one skill installed for every folder (`npx skills add allyhub-ai/allyhub --skill allyhub -g`, AllyHub Studio, or AllyHub's plugin), and its description covers every kind of work, so an agent reads it whatever is asked. The plugin's copy (`plugins/allyhub/skills/allyhub`) is made from this folder by `node scripts/plugin-skill.mjs`: change it here, then run that.
+- The others are **work skills**: each says how to make one kind of work in an AllyHub project (a demo film, a UGC short, the docs of a feature). A work skill is the project's: it is installed into the project as the skills CLI installs one with project scope, in `.agents/skills/<name>` with a link in `.claude/skills/<name>` (from AllyHub's registry, or Studio's gallery), never for every folder. The agent loads it the standard way; nothing of it is copied anywhere else in the project.
 
-Adding a work skill is adding a folder. Nothing in Studio or the CLI changes. One is added only once it has been tried end to end with real agents on a real product; what we aim for when they are tried and improved is in `docs/project-skills/`.
+Adding a work skill is adding a folder. Nothing in Studio or the CLI changes. One is added only once it has been tried end to end with real agents on a real product.
 
 ## A work skill
 
@@ -22,7 +22,7 @@ Adding a work skill is adding a folder. Nothing in Studio or the CLI changes. On
     allyhub/<locale>.yaml the card's words in another language
 ```
 
-Nothing else may be at its top level. `allyhub skill check <folder>` checks all of this; `apps/cli/test/skills.test.ts` runs it on every skill here.
+Nothing else may be at its top level. `node scripts/registry-build.mjs` builds every skill here into an item of the registry, with its card.
 
 ## SKILL.md
 
@@ -33,7 +33,7 @@ The front matter is the standard's, and nothing else (another host's own fields 
 name: product-demos
 description: What it makes, and when to use it (at most 1024 characters).
 license: MIT
-compatibility: Needs the AllyHub CLI (npx -y allyhub, Node.js 22.19 or newer) and the allyhub skill (npx skills add allyhub-ai/skills --skill allyhub -g).
+compatibility: Needs the AllyHub CLI (npx -y allyhub, Node.js 22.19 or newer).
 metadata:
   version: "27"
 ---
@@ -41,18 +41,16 @@ metadata:
 
 `metadata.version` is a whole number, raised when the skill changes.
 
-The body is for the agent, in English:
+The body is for the agent, in English: at most ten sentences, headings aside, ideally fewer. It does not ask for the `allyhub` skill: AllyHub's plugin carries it, Studio gives it to every agent, and `allyhub skills` is how an agent found this one.
 
-- `## Before you start`: it makes its work in an AllyHub project and **the allyhub skill** says how AllyHub works (the check asks for those words), how to get that skill when the agent lacks it, and that a folder that is not a project yet is started with `allyhub new <the folder> --skill <name>`, a project without the skill given it with `allyhub skill add <name>`.
-- `## What it is for`: what it makes, in a few lines.
-- `## How it starts`: what the agent needs from the person. In Studio the person's first message is often the card's prompt with its blanks filled in; the agent asks in one message for what they have not said.
-- Anything the work needs that the allyhub skill does not say: which kinds of AllyHub tools to look for (by kind, such as "the Meta and TikTok ad libraries"; find the exact tool with `allyhub find`), what the result looks like and where it goes (a doc, its tables, the data kept as CSV), what needs the person's yes. What the project already has (its brief, its brand, its kit, made by another skill or an earlier round) is read and built on, never made again.
+- `## Goal`: what it makes, and what good looks like for the person.
+- `## Process`: the agent's own steps in outline, as it does the work (research, use the product, keep what it learns in the project, make, check), and what it leaves in the project.
 
-Short and concrete, at most 500 lines (the standard's limit; move detail to `references/`). It says what a kind of work hands back and where, the person's limits (time, money, what needs their yes) and facts the agent cannot work out. No craft: no named techniques, timings, storyboard formats or review checklists, which a strong model then follows instead of judging. No styles and no kit of components: the agent researches the client's brand and builds the brand's own kit in the project.
+How to do each step is the agent's to work out. A skill names no command, option, API, function, tool, model or camera, and no craft: no techniques, timings, storyboard formats, review checklists, styles or kit of components, which a strong model then follows instead of judging. The CLI's help and the SDK's docs are the reference. A skill grows only where agents are seen to fail at it, by the fewest words that fix that.
 
 ## Studio's card
 
-A skill with `agents/allyhub.yaml` is offered in Studio's gallery and on Home; one without is a skill Studio does not offer (`allyhub` itself). The card's words are Codex's, in `agents/openai.yaml`:
+A skill with `agents/allyhub.yaml` is offered in Studio's gallery and its first run; one without is a skill Studio does not offer (`allyhub` itself). The card's words are Codex's, in `agents/openai.yaml`:
 
 ```yaml
 interface:
@@ -79,11 +77,11 @@ No other field is read: a card with one is not right, and Studio leaves the skil
 
 ### cover.svg
 
-A flat picture of what the skill makes, in AllyHub's look (`packages/ui/IDENTITY.md`). It is Home's card for the skill, so it shows the work itself, not a symbol for it: the product's screen with a cursor and a caption for a demo, a slide with its diagram for an explainer, a vertical short for a launch. Lines stand for words.
+A flat picture of what the skill makes, in AllyHub's look (`packages/editors/ui/IDENTITY.md`). It is Home's card for the skill, so it shows the work itself, not a symbol for it: the product's screen with a cursor and a caption for a demo, a slide with its diagram for an explainer, a vertical short for a launch. Lines stand for words.
 
 - `viewBox="0 0 320 180"`, no `width` or `height`.
 - Flat shapes only: no text, no gradients, no filters, no images, no scripts, no external references. At most 4 KB.
-- Colours, fixed: paper `#F7F7F6`, sheet `#FFFFFF`, stone `#EFEFED`, rule `#DFDFDC`, lead `#605F5A`, ink `#1B1B19`, and the category's own colour: video `#4C7198`, writing `#3F8468`, research `#84608F` (lighter with `opacity`). A cover sits on its category's tint, so the ground is the category colour at low opacity over paper.
+- Colours, fixed, the identity's tokens (`packages/editors/ui/src/styles/tokens.css`): paper `#FAFAFA`, sheet `#FFFFFF`, stone `#F6F6F5`, stone 2 `#EEEEEC`, rule `#E7E7E5`, lead `#5E5E5C`, ink `#111111`, and the category's own colour, the kind of thing it makes: video `#5381BC` (`kind-video`, the blue), writing `#529C6A` (`kind-doc`), research `#C98A4B` (`kind-slides`) (lighter with `opacity`). No violet. A cover sits on its category's tint, so the ground is the category colour at low opacity over paper.
 - The covers of a category are one family: the same ground, the same weight of line, a different subject.
 
 ### Other languages

@@ -1,0 +1,3 @@
+display_name: "Documentação"
+short_description: "A documentação de um recurso, com telas anotadas"
+default_prompt: "Use a skill product-docs: escreva a documentação de [o recurso, com o link]."
