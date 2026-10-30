@@ -1,0 +1,4 @@
+interface:
+  display_name: Product docs
+  short_description: A feature's docs, its screens annotated
+  default_prompt: "Use the product-docs skill: write the docs for [the feature, with its link]."

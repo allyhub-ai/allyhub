@@ -1,0 +1,3 @@
+display_name: "UGC-Shorts"
+short_description: "Ein Feature, wie mit dem Handy in einem 3D-Raum gefilmt"
+default_prompt: "Nutze den Skill ugc-shorts: Mach ein Short zu [dem Feature, mit Link], wie mit dem Handy gefilmt."

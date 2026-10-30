@@ -1,0 +1,4 @@
+interface:
+  display_name: "AllyHub"
+  short_description: "Videos, decks, docs and research, made by your agent"
+  default_prompt: "Use the allyhub skill to make a demo video of my product in this project, open the preview, and take my feedback from the page."

@@ -1,0 +1,3 @@
+display_name: "UGC kısa videolar"
+short_description: "Bir özellik, 3D bir odada telefonla çekilmiş gibi"
+default_prompt: "ugc-shorts becerisini kullan: [özellik ve bağlantısı] için telefonla çekilmiş gibi bir kısa video yap."

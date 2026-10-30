@@ -1,0 +1,3 @@
+display_name: "UGC 短视频"
+short_description: "一个功能，像在 3D 房间里用手机拍下"
+default_prompt: "使用 ugc-shorts 技能：为[功能及其链接]做一支手机拍摄风格的短视频。"

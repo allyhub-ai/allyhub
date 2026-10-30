@@ -1,0 +1,3 @@
+display_name: "Shorts UGC"
+short_description: "Um recurso, como se filmado no celular em uma sala 3D"
+default_prompt: "Use a skill ugc-shorts: faça um short sobre [o recurso, com o link], como se filmado no celular."
