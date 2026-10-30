@@ -1,0 +1,3 @@
+display_name: "製品ドキュメント"
+short_description: "画面に注釈を付けた、ひとつの機能のドキュメント"
+default_prompt: "product-docs スキルを使って：[機能とそのリンク] のドキュメントを [読む人] 向けに書いてください。"

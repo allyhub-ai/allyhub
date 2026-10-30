@@ -1,0 +1,3 @@
+display_name: "Short UGC"
+short_description: "Una funzione, come girata col telefono in una stanza 3D"
+default_prompt: "Usa la skill ugc-shorts: crea uno short su [la funzione, con il suo link], come girato col telefono, per [TikTok, Reels o Shorts]."

@@ -1,0 +1,4 @@
+interface:
+  display_name: UGC shorts
+  short_description: A feature, as if filmed on a phone in a 3D room
+  default_prompt: "Use the ugc-shorts skill: make a short of [the feature, with its link], as if filmed on a phone, for [TikTok, Reels or Shorts]."

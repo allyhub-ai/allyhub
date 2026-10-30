@@ -1,0 +1,3 @@
+display_name: "UGC 短影音"
+short_description: "一個功能，像在 3D 房間裡用手機拍下"
+default_prompt: "使用 ugc-shorts 技能：為[功能及其連結]做一支手機拍攝風格的短影音，發到[TikTok、Reels 或 Shorts]。"

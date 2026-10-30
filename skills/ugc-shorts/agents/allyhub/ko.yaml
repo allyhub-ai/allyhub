@@ -1,0 +1,3 @@
+display_name: "UGC 숏폼"
+short_description: "3D 방에서 휴대폰으로 찍은 듯한 기능 하나"
+default_prompt: "ugc-shorts 스킬을 사용해: [기능과 링크]를 휴대폰으로 찍은 듯한 숏폼으로 만들어 주세요. 올릴 곳은 [TikTok, Reels 또는 Shorts]입니다."

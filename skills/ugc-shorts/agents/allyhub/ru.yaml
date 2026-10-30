@@ -1,0 +1,3 @@
+display_name: "UGC-шортсы"
+short_description: "Одна функция, будто снятая на телефон в 3D-комнате"
+default_prompt: "Используй навык ugc-shorts: сделай шортс, снятый будто на телефон, про [функцию и ссылку на неё] для [TikTok, Reels или Shorts]."

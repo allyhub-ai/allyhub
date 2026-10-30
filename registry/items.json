@@ -1,0 +1,630 @@
+{
+  "name": "allyhub",
+  "homepage": "https://allyhub.com/resources",
+  "items": [
+    {
+      "name": "kit-parts",
+      "type": "allyhub:model",
+      "title": "Kit parts",
+      "description": "The desk kit's shared modelling parts: finishes, boxes, struts, rounded slabs, keycap shapes and their legends' atlas.",
+      "categories": ["kit"],
+      "files": [
+        "components/kit/parts.ts",
+        "components/kit/key-tops.ts",
+        "components/kit/legends.ts",
+        "components/kit/backlight.ts",
+        "assets/media/textures/keycap-legends/atlas.json",
+        "assets/media/textures/keycap-legends/mac.png",
+        "assets/media/textures/keycap-legends/ansi-dark.png",
+        "assets/media/textures/keycap-legends/ansi-light.png"
+      ]
+    },
+    {
+      "name": "desk",
+      "type": "allyhub:model",
+      "title": "Sit-stand desk",
+      "description": "A sit-stand desk sized like the FlexiSpot E7 frame: its top, columns, feet and rails, every size and finish an option.",
+      "categories": ["kit", "furniture"],
+      "files": ["components/kit/desk.ts"],
+      "registryDependencies": ["kit-parts"]
+    },
+    {
+      "name": "monitor",
+      "type": "allyhub:model",
+      "title": "Monitor",
+      "description": "A monitor whose panel is a named screen for screen(): the Dell UltraSharp U2723QE (27-inch 4K) by default; presets after the Dell E2425H (24-inch), the Dell U3423WE (34-inch curved ultrawide), the ASUS ROG Strix XG27AQ (27-inch gaming) and the Apple Studio Display (27-inch 5K on its tilt stand), and a light bar after the BenQ ScreenBar Pro.",
+      "categories": ["kit", "screen"],
+      "files": ["components/kit/monitor.ts"],
+      "registryDependencies": ["kit-parts"]
+    },
+    {
+      "name": "laptop",
+      "type": "allyhub:model",
+      "title": "Laptop",
+      "description": "A laptop with its keys and their legends, its lid at any angle, its display a named screen: the MacBook Pro 14 (M4, space black) by default, or silver; presets after the MacBook Pro 16, the MacBook Air 13 and 15 (midnight, starlight, silver, space grey), the ThinkPad T14 Gen 5 (TrackPoint, PC layout) and the Lenovo Legion Pro 7 16 (RGB keys, number pad), each with its own key layout.",
+      "categories": ["kit", "screen"],
+      "files": ["components/kit/laptop.ts"],
+      "registryDependencies": ["kit-parts"]
+    },
+    {
+      "name": "keyboard",
+      "type": "allyhub:model",
+      "title": "Mechanical keyboard",
+      "description": "A keyboard with its keycaps and legends: the Keychron K8 Pro (tenkeyless, black) by default; presets after the K8 Pro in white, the Keychron K10 (full size), the Apple Magic Keyboard with Touch ID and the Logitech MX Keys S; keys can be backlit.",
+      "categories": ["kit"],
+      "files": ["components/kit/keyboard.ts"],
+      "registryDependencies": ["kit-parts"]
+    },
+    {
+      "name": "desk-items",
+      "type": "allyhub:model",
+      "title": "Desk items",
+      "description": "A mouse after the Logitech MX Master 3S (or the Logitech Pebble Mouse 2, the Apple Magic Mouse, or the Razer DeathAdder V3), the Apple Magic Trackpad (white or black), the SteelSeries QcK XXL mat, an iPhone 16 Pro on a stand, a mug, a clock, a light bar, a globe lamp, figures and a plush.",
+      "categories": ["kit"],
+      "files": ["components/kit/desk-items.ts"],
+      "registryDependencies": ["kit-parts"]
+    },
+    {
+      "name": "tablet",
+      "type": "allyhub:model",
+      "title": "Tablet",
+      "description": "A tablet whose display is a named screen for screen(): the iPad Pro 11-inch (M4) by default, or the 13-inch; flat on the desk or standing on a stand, with the Apple Pencil Pro beside it.",
+      "categories": ["kit", "screen"],
+      "files": ["components/kit/tablet.ts"],
+      "registryDependencies": ["kit-parts"]
+    },
+    {
+      "name": "audio",
+      "type": "allyhub:model",
+      "title": "Microphone and speakers",
+      "description": "A broadcast microphone sized like the Shure SM7B on a Rode PSA1+ boom arm, aimed at a mouth, and desktop speakers sized like the Audioengine A2+.",
+      "categories": ["kit"],
+      "files": ["components/kit/audio.ts"],
+      "registryDependencies": ["kit-parts"]
+    },
+    {
+      "name": "chair",
+      "type": "allyhub:model",
+      "title": "Office chair",
+      "description": "A mesh office chair after the Herman Miller Aeron (size B): see-through seat and back, lumbar Y, curved arms, casters.",
+      "categories": ["kit", "furniture"],
+      "files": ["components/kit/chair.ts"],
+      "registryDependencies": ["kit-parts"]
+    },
+    {
+      "name": "wall",
+      "type": "allyhub:model",
+      "title": "Wall pieces",
+      "description": "Shelves and storage sized like IKEA's LACK and KALLAX with bins, picture frames, a rug and a door.",
+      "categories": ["kit", "furniture"],
+      "files": ["components/kit/wall.ts"],
+      "registryDependencies": ["kit-parts"]
+    },
+    {
+      "name": "kit-variants",
+      "type": "allyhub:scenery",
+      "title": "Kit variants",
+      "description": "Every variant of the kit in rows to look at: laptops, monitors, keyboards, mice, trackpads and tablets in their sizes and colours.",
+      "categories": ["kit"],
+      "files": [
+        "sceneries/kit-variants/model.ts",
+        "sceneries/kit-variants/scenery.ts"
+      ],
+      "registryDependencies": [
+        "desk",
+        "monitor",
+        "laptop",
+        "keyboard",
+        "desk-items",
+        "room",
+        "tablet"
+      ]
+    },
+    {
+      "name": "room",
+      "type": "allyhub:model",
+      "title": "Room shell",
+      "description": "A room's walls, window and blind, floor and ceiling, surfaces at their real tile size, and the named screens and prints a scenery draws on.",
+      "categories": ["room"],
+      "files": [
+        "components/room/shell.ts",
+        "components/room/surfaces.ts",
+        "components/room/screens.ts"
+      ],
+      "assets": [
+        {
+          "source": "polyhaven",
+          "id": "beige_wall_001",
+          "resolution": "1k",
+          "maps": ["normal", "rough"]
+        },
+        {
+          "source": "polyhaven",
+          "id": "laminate_floor_02",
+          "resolution": "1k",
+          "maps": ["diffuse", "normal", "rough"]
+        }
+      ]
+    },
+    {
+      "name": "screen-shots",
+      "type": "allyhub:component",
+      "title": "Screen shots",
+      "description": "Moves that frame a screen's strip, detail or corner from in front, a side or below, sized from popular demos' frames.",
+      "categories": ["camera"],
+      "files": ["components/cameras/screen-shots.ts"]
+    },
+    {
+      "name": "home-desk",
+      "type": "allyhub:scenery",
+      "title": "Home desk",
+      "description": "The home desk setting, as the most watched mechanical-keyboard demos set it: a warm oak 1.6 m desk, a 27-inch monitor with a light bar and a Keychron Q2 Pro with Retro keycaps centred under it, a clock, a figure and a plant, in a room with a window on the left; four looks, the whole room or the desk alone, and an over-the-shoulder camera matched to a popular demo.",
+      "categories": ["setting", "software-demo"],
+      "files": [
+        "components/settings/home-desk/props.ts",
+        "components/settings/home-desk/scenery.ts",
+        "components/settings/home-desk/README.md"
+      ],
+      "registryDependencies": [
+        "desk",
+        "monitor",
+        "keyboard",
+        "desk-items",
+        "audio",
+        "chair",
+        "wall",
+        "room",
+        "screen-shots"
+      ],
+      "assets": [
+        {
+          "source": "polyhaven",
+          "id": "balcony",
+          "resolution": "2k"
+        },
+        {
+          "source": "polyhaven",
+          "id": "potted_plant_04",
+          "resolution": "1k"
+        },
+        {
+          "source": "polyhaven",
+          "id": "book_encyclopedia_set_01",
+          "resolution": "1k"
+        }
+      ]
+    },
+    {
+      "name": "home-desk-day",
+      "type": "allyhub:scenery",
+      "title": "Home desk by day",
+      "description": "The whole home desk room by day, for a talking head or a desk tour.",
+      "categories": ["software-demo"],
+      "files": ["sceneries/home-desk-day/scenery.ts"],
+      "registryDependencies": ["home-desk"],
+      "bake": true,
+      "assets": [
+        {
+          "source": "polyhaven",
+          "id": "oak_veneer_01",
+          "resolution": "2k",
+          "maps": ["diffuse", "normal", "rough"]
+        },
+        {
+          "source": "polyhaven",
+          "id": "potted_plant_01",
+          "resolution": "1k"
+        },
+        {
+          "source": "polyhaven",
+          "id": "potted_plant_02",
+          "resolution": "1k"
+        },
+        {
+          "source": "polyhaven",
+          "id": "ceramic_vase_03",
+          "resolution": "1k"
+        },
+        {
+          "source": "polyhaven",
+          "id": "ceramic_vase_04",
+          "resolution": "1k"
+        }
+      ]
+    },
+    {
+      "name": "home-desk-night",
+      "type": "allyhub:scenery",
+      "title": "Home desk at night",
+      "description": "The whole home desk room at night: lamps, a violet light bar and an LED strip.",
+      "categories": ["software-demo"],
+      "files": ["sceneries/home-desk-night/scenery.ts"],
+      "registryDependencies": ["home-desk"],
+      "bake": true,
+      "assets": [
+        {
+          "source": "polyhaven",
+          "id": "american_walnut_veneer",
+          "resolution": "2k",
+          "maps": ["diffuse", "normal", "rough"]
+        },
+        {
+          "source": "polyhaven",
+          "id": "potted_plant_01",
+          "resolution": "1k"
+        },
+        {
+          "source": "polyhaven",
+          "id": "potted_plant_02",
+          "resolution": "1k"
+        },
+        {
+          "source": "polyhaven",
+          "id": "ceramic_vase_03",
+          "resolution": "1k"
+        },
+        {
+          "source": "polyhaven",
+          "id": "ceramic_vase_04",
+          "resolution": "1k"
+        }
+      ]
+    },
+    {
+      "name": "home-desk-demo-day",
+      "type": "allyhub:scenery",
+      "title": "Home desk demo by day",
+      "description": "The home desk's desk and wall alone by day, for a demo filmed close to the screen.",
+      "categories": ["software-demo"],
+      "files": ["sceneries/home-desk-demo-day/scenery.ts"],
+      "registryDependencies": ["home-desk"],
+      "bake": true,
+      "assets": [
+        {
+          "source": "polyhaven",
+          "id": "oak_veneer_01",
+          "resolution": "2k",
+          "maps": ["diffuse", "normal", "rough"]
+        }
+      ]
+    },
+    {
+      "name": "home-desk-demo-overcast",
+      "type": "allyhub:scenery",
+      "title": "Home desk demo, overcast",
+      "description": "The home desk's desk and wall alone under a grey sky: soft, cool light.",
+      "categories": ["software-demo"],
+      "files": ["sceneries/home-desk-demo-overcast/scenery.ts"],
+      "registryDependencies": ["home-desk"],
+      "bake": true,
+      "assets": [
+        {
+          "source": "polyhaven",
+          "id": "oak_veneer_01",
+          "resolution": "2k",
+          "maps": ["diffuse", "normal", "rough"]
+        }
+      ]
+    },
+    {
+      "name": "home-desk-demo-evening",
+      "type": "allyhub:scenery",
+      "title": "Home desk demo in the evening",
+      "description": "The home desk's desk and wall alone in the evening: the window dim, a warm light bar on.",
+      "categories": ["software-demo"],
+      "files": ["sceneries/home-desk-demo-evening/scenery.ts"],
+      "registryDependencies": ["home-desk"],
+      "bake": true,
+      "assets": [
+        {
+          "source": "polyhaven",
+          "id": "oak_veneer_01",
+          "resolution": "2k",
+          "maps": ["diffuse", "normal", "rough"]
+        }
+      ]
+    },
+    {
+      "name": "home-desk-demo-night",
+      "type": "allyhub:scenery",
+      "title": "Home desk demo at night",
+      "description": "The home desk's desk and wall alone at night, lit by the screens and a violet light bar.",
+      "categories": ["software-demo"],
+      "files": ["sceneries/home-desk-demo-night/scenery.ts"],
+      "registryDependencies": ["home-desk"],
+      "bake": true,
+      "assets": [
+        {
+          "source": "polyhaven",
+          "id": "american_walnut_veneer",
+          "resolution": "2k",
+          "maps": ["diffuse", "normal", "rough"]
+        }
+      ]
+    },
+    {
+      "name": "bedroom-desk",
+      "type": "allyhub:scenery",
+      "title": "Bedroom desk",
+      "description": "A pale pink desk in a bedroom corner beside the window, as pastel tablet videos set it: an iPad Pro 11 upright in portrait on an aluminium stand on a coiled rattan placemat, a globe lamp, a mug, and a framed print of Monet's Water Lilies (1906, public domain) over it; warm and soft. Four looks, the whole room or the desk alone, cameras on the tablet.",
+      "categories": ["setting", "software-demo"],
+      "files": [
+        "components/settings/bedroom-desk/props.ts",
+        "components/settings/bedroom-desk/scenery.ts",
+        "components/settings/bedroom-desk/README.md",
+        "assets/media/art/monet-water-lilies-1906.jpg",
+        "assets/media/art/README.md"
+      ],
+      "registryDependencies": [
+        "desk",
+        "tablet",
+        "desk-items",
+        "chair",
+        "wall",
+        "room",
+        "screen-shots"
+      ],
+      "assets": [
+        {
+          "source": "polyhaven",
+          "id": "balcony",
+          "resolution": "2k"
+        },
+        {
+          "source": "polyhaven",
+          "id": "book_encyclopedia_set_01",
+          "resolution": "1k"
+        },
+        {
+          "source": "polyhaven",
+          "id": "potted_plant_04",
+          "resolution": "1k"
+        }
+      ]
+    },
+    {
+      "name": "bedroom-desk-day",
+      "type": "allyhub:scenery",
+      "title": "Bedroom desk by day",
+      "description": "The whole bedroom desk room by day.",
+      "categories": ["software-demo"],
+      "files": ["sceneries/bedroom-desk-day/scenery.ts"],
+      "registryDependencies": ["bedroom-desk"],
+      "bake": true,
+      "assets": [
+        {
+          "source": "polyhaven",
+          "id": "ceramic_vase_03",
+          "resolution": "1k"
+        },
+        {
+          "source": "polyhaven",
+          "id": "potted_plant_01",
+          "resolution": "1k"
+        }
+      ]
+    },
+    {
+      "name": "bedroom-desk-demo-day",
+      "type": "allyhub:scenery",
+      "title": "Bedroom desk demo by day",
+      "description": "The bedroom desk's desk and wall alone by day, for a demo filmed close to the screen.",
+      "categories": ["software-demo"],
+      "files": ["sceneries/bedroom-desk-demo-day/scenery.ts"],
+      "registryDependencies": ["bedroom-desk"],
+      "bake": true
+    },
+    {
+      "name": "bedroom-desk-demo-overcast",
+      "type": "allyhub:scenery",
+      "title": "Bedroom desk demo under a grey sky",
+      "description": "The bedroom desk's desk and wall alone under a grey sky, for a demo filmed close to the screen.",
+      "categories": ["software-demo"],
+      "files": ["sceneries/bedroom-desk-demo-overcast/scenery.ts"],
+      "registryDependencies": ["bedroom-desk"],
+      "bake": true
+    },
+    {
+      "name": "bedroom-desk-demo-evening",
+      "type": "allyhub:scenery",
+      "title": "Bedroom desk demo in the evening",
+      "description": "The bedroom desk's desk and wall alone in the evening, for a demo filmed close to the screen.",
+      "categories": ["software-demo"],
+      "files": ["sceneries/bedroom-desk-demo-evening/scenery.ts"],
+      "registryDependencies": ["bedroom-desk"],
+      "bake": true
+    },
+    {
+      "name": "bedroom-desk-demo-night",
+      "type": "allyhub:scenery",
+      "title": "Bedroom desk demo at night",
+      "description": "The bedroom desk's desk and wall alone at night, for a demo filmed close to the screen.",
+      "categories": ["software-demo"],
+      "files": ["sceneries/bedroom-desk-demo-night/scenery.ts"],
+      "registryDependencies": ["bedroom-desk"],
+      "bake": true
+    },
+    {
+      "name": "gaming-setup",
+      "type": "allyhub:scenery",
+      "title": "Gaming setup",
+      "description": "A dark room, a black 1.6 m desk, a PC tower with lit fans and LED strips behind the desk and under its shelves; strongly coloured at night. Four looks, the whole room or the desk alone, the same cameras as the home desk.",
+      "categories": ["setting", "software-demo"],
+      "files": [
+        "components/settings/gaming-setup/props.ts",
+        "components/settings/gaming-setup/scenery.ts",
+        "components/settings/gaming-setup/README.md"
+      ],
+      "registryDependencies": [
+        "desk",
+        "monitor",
+        "laptop",
+        "keyboard",
+        "desk-items",
+        "chair",
+        "wall",
+        "room",
+        "screen-shots"
+      ],
+      "assets": [
+        {
+          "source": "polyhaven",
+          "id": "balcony",
+          "resolution": "2k"
+        },
+        {
+          "source": "polyhaven",
+          "id": "book_encyclopedia_set_01",
+          "resolution": "1k"
+        },
+        {
+          "source": "polyhaven",
+          "id": "potted_plant_04",
+          "resolution": "1k"
+        }
+      ]
+    },
+    {
+      "name": "gaming-setup-day",
+      "type": "allyhub:scenery",
+      "title": "Gaming setup by day",
+      "description": "The whole gaming setup room by day.",
+      "categories": ["software-demo"],
+      "files": ["sceneries/gaming-setup-day/scenery.ts"],
+      "registryDependencies": ["gaming-setup"],
+      "bake": true
+    },
+    {
+      "name": "gaming-setup-demo-day",
+      "type": "allyhub:scenery",
+      "title": "Gaming setup demo by day",
+      "description": "The gaming setup's desk and wall alone by day, for a demo filmed close to the screen.",
+      "categories": ["software-demo"],
+      "files": ["sceneries/gaming-setup-demo-day/scenery.ts"],
+      "registryDependencies": ["gaming-setup"],
+      "bake": true
+    },
+    {
+      "name": "gaming-setup-demo-overcast",
+      "type": "allyhub:scenery",
+      "title": "Gaming setup demo under a grey sky",
+      "description": "The gaming setup's desk and wall alone under a grey sky, for a demo filmed close to the screen.",
+      "categories": ["software-demo"],
+      "files": ["sceneries/gaming-setup-demo-overcast/scenery.ts"],
+      "registryDependencies": ["gaming-setup"],
+      "bake": true
+    },
+    {
+      "name": "gaming-setup-demo-evening",
+      "type": "allyhub:scenery",
+      "title": "Gaming setup demo in the evening",
+      "description": "The gaming setup's desk and wall alone in the evening, for a demo filmed close to the screen.",
+      "categories": ["software-demo"],
+      "files": ["sceneries/gaming-setup-demo-evening/scenery.ts"],
+      "registryDependencies": ["gaming-setup"],
+      "bake": true
+    },
+    {
+      "name": "gaming-setup-demo-night",
+      "type": "allyhub:scenery",
+      "title": "Gaming setup demo at night",
+      "description": "The gaming setup's desk and wall alone at night, for a demo filmed close to the screen.",
+      "categories": ["software-demo"],
+      "files": ["sceneries/gaming-setup-demo-night/scenery.ts"],
+      "registryDependencies": ["gaming-setup"],
+      "bake": true
+    },
+    {
+      "name": "minimal-white",
+      "type": "allyhub:scenery",
+      "title": "Minimal white desk",
+      "description": "A white 1.4 m desk against a light wall with very few things on it, in bright soft daylight. Four looks, the whole room or the desk alone, the same cameras as the home desk.",
+      "categories": ["setting", "software-demo"],
+      "files": [
+        "components/settings/minimal-white/props.ts",
+        "components/settings/minimal-white/scenery.ts",
+        "components/settings/minimal-white/README.md"
+      ],
+      "registryDependencies": [
+        "desk",
+        "monitor",
+        "laptop",
+        "keyboard",
+        "desk-items",
+        "chair",
+        "wall",
+        "room",
+        "screen-shots"
+      ],
+      "assets": [
+        {
+          "source": "polyhaven",
+          "id": "balcony",
+          "resolution": "2k"
+        },
+        {
+          "source": "polyhaven",
+          "id": "potted_plant_04",
+          "resolution": "1k"
+        }
+      ]
+    },
+    {
+      "name": "minimal-white-day",
+      "type": "allyhub:scenery",
+      "title": "Minimal white desk by day",
+      "description": "The whole minimal white desk room by day.",
+      "categories": ["software-demo"],
+      "files": ["sceneries/minimal-white-day/scenery.ts"],
+      "registryDependencies": ["minimal-white"],
+      "bake": true,
+      "assets": [
+        {
+          "source": "polyhaven",
+          "id": "potted_plant_01",
+          "resolution": "1k"
+        }
+      ]
+    },
+    {
+      "name": "minimal-white-demo-day",
+      "type": "allyhub:scenery",
+      "title": "Minimal white desk demo by day",
+      "description": "The minimal white desk's desk and wall alone by day, for a demo filmed close to the screen.",
+      "categories": ["software-demo"],
+      "files": ["sceneries/minimal-white-demo-day/scenery.ts"],
+      "registryDependencies": ["minimal-white"],
+      "bake": true
+    },
+    {
+      "name": "minimal-white-demo-overcast",
+      "type": "allyhub:scenery",
+      "title": "Minimal white desk demo under a grey sky",
+      "description": "The minimal white desk's desk and wall alone under a grey sky, for a demo filmed close to the screen.",
+      "categories": ["software-demo"],
+      "files": ["sceneries/minimal-white-demo-overcast/scenery.ts"],
+      "registryDependencies": ["minimal-white"],
+      "bake": true
+    },
+    {
+      "name": "minimal-white-demo-evening",
+      "type": "allyhub:scenery",
+      "title": "Minimal white desk demo in the evening",
+      "description": "The minimal white desk's desk and wall alone in the evening, for a demo filmed close to the screen.",
+      "categories": ["software-demo"],
+      "files": ["sceneries/minimal-white-demo-evening/scenery.ts"],
+      "registryDependencies": ["minimal-white"],
+      "bake": true
+    },
+    {
+      "name": "minimal-white-demo-night",
+      "type": "allyhub:scenery",
+      "title": "Minimal white desk demo at night",
+      "description": "The minimal white desk's desk and wall alone at night, for a demo filmed close to the screen.",
+      "categories": ["software-demo"],
+      "files": ["sceneries/minimal-white-demo-night/scenery.ts"],
+      "registryDependencies": ["minimal-white"],
+      "bake": true
+    }
+  ]
+}

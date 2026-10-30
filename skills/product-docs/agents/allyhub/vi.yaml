@@ -1,0 +1,3 @@
+display_name: "Tài liệu sản phẩm"
+short_description: "Tài liệu một tính năng, kèm màn hình có chú thích"
+default_prompt: "Dùng skill product-docs: viết tài liệu cho [tính năng, kèm liên kết] dành cho [người đọc]."

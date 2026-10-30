@@ -1,0 +1,3 @@
+display_name: "产品文档"
+short_description: "一个功能的产品文档，配带标注的界面图"
+default_prompt: "使用 product-docs 技能：为[功能及其链接]写产品文档，读者是[谁]。"
