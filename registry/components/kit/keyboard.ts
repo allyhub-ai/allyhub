@@ -50,7 +50,7 @@ import {
   type Backlight,
 } from "./backlight.ts";
 import { legendDecals } from "./legends.ts";
-import atlas from "../../assets/media/textures/keycap-legends/atlas.json";
+import atlas from "../../assets/media/textures/keycap-legends/atlas.json" with { type: "json" };
 
 /** A row's keys as widths in units (u); a negative width is a gap of that many units. */
 type Row = number[];

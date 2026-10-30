@@ -36,7 +36,7 @@ import {
   backlightSpill,
   type Backlight,
 } from "./backlight.ts";
-import atlas from "../../assets/media/textures/keycap-legends/atlas.json";
+import atlas from "../../assets/media/textures/keycap-legends/atlas.json" with { type: "json" };
 
 /** What a port is, by its opening's shape: `PORT_SIZES` has each one's length, height and corner. */
 export type PortKind =
@@ -1082,11 +1082,15 @@ class Cuts {
     string,
     { material: ModelMaterial; shape: Shape }
   >();
-  constructor(
-    private readonly bpy: Bpy,
-    private readonly name: string,
-    private readonly parent: ModelObject,
-  ) {}
+  // Plain fields, not parameter properties: Node runs this file with its types stripped (allyhub 3d-model).
+  private readonly bpy: Bpy;
+  private readonly name: string;
+  private readonly parent: ModelObject;
+  constructor(bpy: Bpy, name: string, parent: ModelObject) {
+    this.bpy = bpy;
+    this.name = name;
+    this.parent = parent;
+  }
   /** Shapes under one `key` (by default their material's name) are one cutter: they must not overlap. */
   add(shape: Shape, material: ModelMaterial, key = material.name): void {
     const entry = this.sets.get(key) ?? { material, shape: { v: [], f: [] } };
