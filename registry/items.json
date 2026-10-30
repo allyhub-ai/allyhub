@@ -4,7 +4,7 @@
   "items": [
     {
       "name": "kit-parts",
-      "type": "allyhub:model",
+      "type": "allyhub:lib",
       "title": "Kit parts",
       "description": "The desk kit's shared modelling parts: finishes, boxes, struts, rounded slabs, keycap shapes and their legends' atlas.",
       "categories": ["kit"],
@@ -16,7 +16,8 @@
         "assets/media/textures/keycap-legends/atlas.json",
         "assets/media/textures/keycap-legends/mac.png",
         "assets/media/textures/keycap-legends/ansi-dark.png",
-        "assets/media/textures/keycap-legends/ansi-light.png"
+        "assets/media/textures/keycap-legends/ansi-light.png",
+        "components/kit/piece.ts"
       ]
     },
     {
@@ -25,7 +26,7 @@
       "title": "Sit-stand desk",
       "description": "A sit-stand desk sized like the FlexiSpot E7 frame: its top, columns, feet and rails, every size and finish an option.",
       "categories": ["kit", "furniture"],
-      "files": ["components/kit/desk.ts"],
+      "files": ["components/kit/desk.ts", "models/desk/model.ts"],
       "registryDependencies": ["kit-parts"]
     },
     {
@@ -34,7 +35,7 @@
       "title": "Monitor",
       "description": "A monitor whose panel is a named screen for screen(): the Dell UltraSharp U2723QE (27-inch 4K) by default; presets after the Dell E2425H (24-inch), the Dell U3423WE (34-inch curved ultrawide), the ASUS ROG Strix XG27AQ (27-inch gaming) and the Apple Studio Display (27-inch 5K on its tilt stand), and a light bar after the BenQ ScreenBar Pro.",
       "categories": ["kit", "screen"],
-      "files": ["components/kit/monitor.ts"],
+      "files": ["components/kit/monitor.ts", "models/monitor/model.ts"],
       "registryDependencies": ["kit-parts"]
     },
     {
@@ -43,7 +44,7 @@
       "title": "Laptop",
       "description": "A laptop with its keys and their legends, its lid at any angle, its display a named screen: the MacBook Pro 14 (M4, space black) by default, or silver; presets after the MacBook Pro 16, the MacBook Air 13 and 15 (midnight, starlight, silver, space grey), the ThinkPad T14 Gen 5 (TrackPoint, PC layout) and the Lenovo Legion Pro 7 16 (RGB keys, number pad), each with its own key layout.",
       "categories": ["kit", "screen"],
-      "files": ["components/kit/laptop.ts"],
+      "files": ["components/kit/laptop.ts", "models/laptop/model.ts"],
       "registryDependencies": ["kit-parts"]
     },
     {
@@ -52,12 +53,12 @@
       "title": "Mechanical keyboard",
       "description": "A keyboard with its keycaps and legends: the Keychron K8 Pro (tenkeyless, black) by default; presets after the K8 Pro in white, the Keychron K10 (full size), the Apple Magic Keyboard with Touch ID and the Logitech MX Keys S; keys can be backlit.",
       "categories": ["kit"],
-      "files": ["components/kit/keyboard.ts"],
+      "files": ["components/kit/keyboard.ts", "models/keyboard/model.ts"],
       "registryDependencies": ["kit-parts"]
     },
     {
       "name": "desk-items",
-      "type": "allyhub:model",
+      "type": "allyhub:lib",
       "title": "Desk items",
       "description": "A mouse after the Logitech MX Master 3S (or the Logitech Pebble Mouse 2, the Apple Magic Mouse, or the Razer DeathAdder V3), the Apple Magic Trackpad (white or black), the SteelSeries QcK XXL mat, an iPhone 16 Pro on a stand, a mug, a clock, a light bar, a globe lamp, figures and a plush.",
       "categories": ["kit"],
@@ -65,17 +66,44 @@
       "registryDependencies": ["kit-parts"]
     },
     {
+      "name": "mouse",
+      "type": "allyhub:model",
+      "title": "Mouse",
+      "description": "A mouse after the Logitech MX Master 3S by default, or the Logitech Pebble Mouse 2, the Apple Magic Mouse or the Razer DeathAdder V3 (`kind`).",
+      "categories": ["kit"],
+      "files": ["models/mouse/model.ts"],
+      "registryDependencies": ["desk-items"]
+    },
+    {
+      "name": "trackpad",
+      "type": "allyhub:model",
+      "title": "Trackpad",
+      "description": "The Apple Magic Trackpad, white or black (`preset`).",
+      "categories": ["kit"],
+      "files": ["models/trackpad/model.ts"],
+      "registryDependencies": ["desk-items"]
+    },
+    {
+      "name": "phone",
+      "type": "allyhub:model",
+      "title": "Phone",
+      "description": "An iPhone 16 Pro at its published size.",
+      "categories": ["kit"],
+      "files": ["models/phone/model.ts"],
+      "registryDependencies": ["desk-items"]
+    },
+    {
       "name": "tablet",
       "type": "allyhub:model",
       "title": "Tablet",
       "description": "A tablet whose display is a named screen for screen(): the iPad Pro 11-inch (M4) by default, or the 13-inch; flat on the desk or standing on a stand, with the Apple Pencil Pro beside it.",
       "categories": ["kit", "screen"],
-      "files": ["components/kit/tablet.ts"],
+      "files": ["components/kit/tablet.ts", "models/tablet/model.ts"],
       "registryDependencies": ["kit-parts"]
     },
     {
       "name": "audio",
-      "type": "allyhub:model",
+      "type": "allyhub:lib",
       "title": "Microphone and speakers",
       "description": "A broadcast microphone sized like the Shure SM7B on a Rode PSA1+ boom arm, aimed at a mouth, and desktop speakers sized like the Audioengine A2+.",
       "categories": ["kit"],
@@ -83,17 +111,35 @@
       "registryDependencies": ["kit-parts"]
     },
     {
+      "name": "microphone",
+      "type": "allyhub:model",
+      "title": "Microphone",
+      "description": "A broadcast microphone sized like the Shure SM7B on a Rode PSA1+ boom arm.",
+      "categories": ["kit"],
+      "files": ["models/microphone/model.ts"],
+      "registryDependencies": ["audio"]
+    },
+    {
+      "name": "speaker",
+      "type": "allyhub:model",
+      "title": "Speaker",
+      "description": "A desktop speaker sized like the Audioengine A2+.",
+      "categories": ["kit"],
+      "files": ["models/speaker/model.ts"],
+      "registryDependencies": ["audio"]
+    },
+    {
       "name": "chair",
       "type": "allyhub:model",
       "title": "Office chair",
       "description": "A mesh office chair after the Herman Miller Aeron (size B): see-through seat and back, lumbar Y, curved arms, casters.",
       "categories": ["kit", "furniture"],
-      "files": ["components/kit/chair.ts"],
+      "files": ["components/kit/chair.ts", "models/chair/model.ts"],
       "registryDependencies": ["kit-parts"]
     },
     {
       "name": "wall",
-      "type": "allyhub:model",
+      "type": "allyhub:lib",
       "title": "Wall pieces",
       "description": "Shelves and storage sized like IKEA's LACK and KALLAX with bins, picture frames, a rug and a door.",
       "categories": ["kit", "furniture"],
@@ -107,7 +153,7 @@
       "description": "Every variant of the kit in rows to look at: laptops, monitors, keyboards, mice, trackpads and tablets in their sizes and colours.",
       "categories": ["kit"],
       "files": [
-        "sceneries/kit-variants/model.ts",
+        "sceneries/kit-variants/variants.ts",
         "sceneries/kit-variants/scenery.ts"
       ],
       "registryDependencies": [
@@ -122,7 +168,7 @@
     },
     {
       "name": "room",
-      "type": "allyhub:model",
+      "type": "allyhub:lib",
       "title": "Room shell",
       "description": "A room's walls, window and blind, floor and ceiling, surfaces at their real tile size, and the named screens and prints a scenery draws on.",
       "categories": ["room"],
@@ -156,7 +202,7 @@
     },
     {
       "name": "home-desk",
-      "type": "allyhub:scenery",
+      "type": "allyhub:lib",
       "title": "Home desk",
       "description": "The home desk setting, as the most watched mechanical-keyboard demos set it: a warm oak 1.6 m desk, a 27-inch monitor with a light bar and a Keychron Q2 Pro with Retro keycaps centred under it, a clock, a figure and a plant, in a room with a window on the left; four looks, the whole room or the desk alone, and an over-the-shoulder camera matched to a popular demo.",
       "categories": ["setting", "software-demo"],
@@ -344,7 +390,7 @@
     },
     {
       "name": "bedroom-desk",
-      "type": "allyhub:scenery",
+      "type": "allyhub:lib",
       "title": "Bedroom desk",
       "description": "A pale pink desk in a bedroom corner beside the window, as pastel tablet videos set it: an iPad Pro 11 upright in portrait on an aluminium stand on a coiled rattan placemat, a globe lamp, a mug, and a framed print of Monet's Water Lilies (1906, public domain) over it; warm and soft. Four looks, the whole room or the desk alone, cameras on the tablet.",
       "categories": ["setting", "software-demo"],
@@ -446,7 +492,7 @@
     },
     {
       "name": "gaming-setup",
-      "type": "allyhub:scenery",
+      "type": "allyhub:lib",
       "title": "Gaming setup",
       "description": "A dark room, a black 1.6 m desk, a PC tower with lit fans and LED strips behind the desk and under its shelves; strongly coloured at night. Four looks, the whole room or the desk alone, the same cameras as the home desk.",
       "categories": ["setting", "software-demo"],
@@ -536,7 +582,7 @@
     },
     {
       "name": "minimal-white",
-      "type": "allyhub:scenery",
+      "type": "allyhub:lib",
       "title": "Minimal white desk",
       "description": "A white 1.4 m desk against a light wall with very few things on it, in bright soft daylight. Four looks, the whole room or the desk alone, the same cameras as the home desk.",
       "categories": ["setting", "software-demo"],

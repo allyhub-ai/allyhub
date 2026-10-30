@@ -6,7 +6,7 @@ This repository holds:
 
 - **The plugin** (`plugins/allyhub/`) for Claude Code, ChatGPT and Codex, with its marketplaces (`.claude-plugin/`, `.agents/plugins/`).
 - **Skills** (`skills/<name>/`): how to make one kind of work, added to a project.
-- **The registry** (`registry/<name>/`): components, templates, sceneries and models a project adds with `npx allyhub add <name>`.
+- **The registry** (`registry/<name>/`): components, templates, sceneries and models a project adds with `npx allyhub add <type>/<name>`.
 - **Issues**: report a bug or ask for a feature here.
 
 ## Install

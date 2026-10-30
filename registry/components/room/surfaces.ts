@@ -3,7 +3,7 @@ import * as THREE from "three";
 import type { SceneryHost } from "@allyhub-next/scenery-host/layer";
 
 /**
- * A Poly Haven texture fetched with `allyhub add <id> --res <res>`: its id, the
+ * A Poly Haven texture fetched with `allyhub add @polyhaven/<id> --res <res>`: its id, the
  * surface one tile of it covers in metres (the search lists it) and its
  * resolution: 2k where a camera comes close (the desk's wood), 1k behind.
  */

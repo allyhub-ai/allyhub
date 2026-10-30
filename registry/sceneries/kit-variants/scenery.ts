@@ -1,9 +1,9 @@
-// The desk kit's variants side by side (kit-variants/model.ts) under a plain sky and sun, to look them over.
+// The desk kit's variants side by side (kit-variants/variants.ts) under a plain sky and sun, to look them over.
 // Scenery axes (Y up): the model's rows run along x, their fronts towards +z.
 import * as THREE from "three";
 import { defineScenery } from "@allyhub-next/scenery-host/layer";
 import { modelObject } from "@allyhub-next/model/three";
-import variants from "./model.ts";
+import variants from "./variants.ts";
 import { browserPage, screenOn } from "../../components/room/screens.ts";
 
 export default defineScenery({
