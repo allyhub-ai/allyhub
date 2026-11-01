@@ -1,0 +1,3 @@
+display_name: "演示文稿"
+short_description: "有设计感、属于你品牌的演示文稿"
+default_prompt: "使用 brand-decks 技能：做一份关于[主题]的演示文稿，给[谁]看，让他们[做什么]。"

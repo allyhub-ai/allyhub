@@ -1,0 +1,3 @@
+display_name: "スライド"
+short_description: "ブランドに合わせてデザインされたスライド"
+default_prompt: "brand-decks スキルを使って、[テーマ]についてのスライドを[誰]向けに作り、[してほしいこと]につなげてください。"

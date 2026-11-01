@@ -24,11 +24,11 @@ export type Version = "room" | "demo";
 
 /** The room: 3.2 m wide, its left wall (the window's) at x = -0.55, the desk's wall at z = -0.92 (world). */
 /**
- * The room: 3.2 m wide, its window in its right wall (x = WINDOW_WALL, world), the desk's wall at z = -0.92. The
+ * The room: 3.5 m wide, its window in its right wall (x = WINDOW_WALL, world), the desk's wall at z = -0.92. The
  * shell puts its window in its left wall, so it is built facing the other way (its back wall is the desk's) and
  * turned round.
  */
-const ROOM = { width: 3.2, front: BACK_WALL, back: DESK_WALL };
+const ROOM = { width: 3.5, front: BACK_WALL, back: DESK_WALL };
 const ROOM_SHIFT = WINDOW_WALL - ROOM.width / 2;
 
 /**
@@ -76,7 +76,7 @@ const LOOKS = {
 } as const;
 
 /** What glows is drawn, but its light is the light standing for it: baking both would count it twice. */
-const GLOWS = ["ceiling-light", "GlobeLampGlobe", "tablet-screen"];
+const GLOWS = ["ceiling-light", "GlobeLampGlobe", "laptop-screen"];
 
 /** A Poly Haven model, placed: where it stands (world), its turn about y (degrees) and scale. */
 async function place(
@@ -94,57 +94,6 @@ async function place(
   model.scale.setScalar(scale);
   w.scene.add(model);
   return model;
-}
-
-/**
- * A coiled rattan placemat's top, `size` px square: rings of cane 5 mm apart on a 35 cm mat, shaded across each
- * coil, and the binds that stitch each coil to the next, offset ring to ring as a coiled weave's are.
- */
-function rattanWeave(size: number): THREE.CanvasTexture {
-  const canvas = document.createElement("canvas");
-  canvas.width = canvas.height = size;
-  const g = canvas.getContext("2d");
-  if (!g) throw new Error("No 2D canvas for the placemat's weave.");
-  const c = size / 2;
-  g.fillStyle = "#d6b783";
-  g.fillRect(0, 0, size, size);
-  const coils = 34;
-  const step = c / coils;
-  for (let i = coils; i > 0; i--) {
-    const r = i * step;
-    const shade = g.createRadialGradient(c, c, r - step, c, c, r);
-    shade.addColorStop(0, "#b8945e");
-    shade.addColorStop(0.45, i % 3 === 0 ? "#dcbf8c" : "#e2c693");
-    shade.addColorStop(1, "#c7a46c");
-    g.fillStyle = shade;
-    g.beginPath();
-    g.arc(c, c, r, 0, Math.PI * 2);
-    g.fill();
-  }
-  g.strokeStyle = "#8f6d40";
-  g.lineCap = "round";
-  for (let i = 2; i <= coils; i++) {
-    const r = i * step;
-    const binds = Math.max(6, Math.round((2 * Math.PI * r) / (step * 2.2)));
-    for (let k = 0; k < binds; k++) {
-      const a = ((k + (i % 2) * 0.5) / binds) * Math.PI * 2;
-      g.lineWidth = step * 0.28;
-      g.beginPath();
-      g.moveTo(
-        c + Math.cos(a) * (r - step * 0.95),
-        c + Math.sin(a) * (r - step * 0.95),
-      );
-      g.lineTo(
-        c + Math.cos(a) * (r - step * 0.05),
-        c + Math.sin(a) * (r - step * 0.05),
-      );
-      g.stroke();
-    }
-  }
-  const texture = new THREE.CanvasTexture(canvas);
-  texture.colorSpace = THREE.SRGBColorSpace;
-  texture.anisotropy = 8;
-  return texture;
 }
 
 /** A rectangle light named `name`, at `at`, shining towards `to`. */
@@ -189,7 +138,7 @@ export function bedroomDesk(
       w.scene.environmentIntensity = L.sky;
       w.scene.backgroundIntensity = L.sky;
 
-      // The room, turned round and moved so its window's wall stands 5 cm from the desk's right end: the light
+      // The room, turned round and moved so its window's wall stands 35 cm from the desk's right end, the sill clear of the desk: the light
       // comes from the right, as the home desk's comes from the left. The window is beside the desk and the
       // person (its centre level with the chair's front), clear of the desk's wall.
       const room = await shell(w, {
@@ -217,34 +166,17 @@ export function bedroomDesk(
 
       // The screens: named planes a video's screen() draws on, showing an idle page until then.
       const light = look !== "night";
-      // The tablet's screen, an idle page until a video puts its own on it; the postcards' pictures.
+      // The laptop's screen, an idle page until a video puts its own on it.
       const idle = new THREE.MeshBasicMaterial({
-        map: browserPage(1668, 2420, light, 834),
+        map: browserPage(3024, 1964, light, 1512),
       });
       idle.color.setScalar(L.monitor);
       kit.add(
-        screenOver(kit, "TabletScreen", "tablet-screen", idle, {
-          up: [1, 0, 0],
-          out: [0, 0, 1],
+        screenOver(kit, "LaptopScreen", "laptop-screen", idle, {
+          up: [0, -1, 0],
+          out: [0, 0, -1],
         }),
       );
-      // The placemat's weave: coils of cane round the centre, each stitched to the next by short dark binds.
-      const mat = kit.getObjectByName("PlacematTop");
-      if (mat) {
-        const box = new THREE.Box3().setFromObject(mat);
-        const centre = box.getCenter(new THREE.Vector3());
-        const weave = new THREE.Mesh(
-          new THREE.CircleGeometry(0.173, 96),
-          new THREE.MeshStandardMaterial({
-            map: rattanWeave(1024),
-            roughness: 0.85,
-          }),
-        );
-        weave.name = "placemat-weave";
-        weave.rotation.x = -Math.PI / 2;
-        weave.position.set(centre.x, box.max.y + 0.0003, centre.z);
-        kit.add(weave);
-      }
       // The print over the desk: Claude Monet, Water Lilies, 1906 (Art Institute of Chicago, CC0).
       const monet = await w.texture(
         "assets/media/art/monet-water-lilies-1906.jpg",
@@ -320,8 +252,8 @@ export function bedroomDesk(
         w.scene.add(bulb);
       }
 
-      // The tablet's steady light: a pane on its face, which a video's screen then adds its picture's difference to.
-      const screen = kit.getObjectByName("tablet-screen");
+      // The laptop's steady light: a pane on its face, which a video's screen then adds its picture's difference to.
+      const screen = kit.getObjectByName("laptop-screen");
       if (screen instanceof THREE.Mesh) {
         const g = screen.geometry as THREE.PlaneGeometry;
         const normal = new THREE.Vector3(0, 0, 1).applyQuaternion(
@@ -332,7 +264,7 @@ export function bedroomDesk(
           .addScaledVector(normal, 0.005);
         w.scene.add(
           pane(
-            "tablet-light",
+            "laptop-light",
             "#e8eefc",
             L.monitor,
             [g.parameters.width, g.parameters.height],
@@ -352,38 +284,34 @@ export function bedroomDesk(
         lensFrame: "phone",
         ev: L.ev,
       },
-      // The demo: over the right shoulder, looking down at the tablet.
+      // The demo, as popular laptop demos film it: over the hands, the screen above and the keys below (the
+      // camera solved from a popular demo's frame on the home desk, brought to this laptop).
+      "laptop-over-hands": {
+        position: [0, 1.143, -0.287],
+        yaw: 0,
+        pitch: -26.9,
+        lens: 26,
+        lensFrame: "phone",
+        ev: L.ev,
+      },
+      // Low over the keys, 10 cm above the desk, looking along them at the screen.
+      "keys-low": {
+        position: [0, 0.838, -0.465],
+        yaw: 0,
+        pitch: -12,
+        lens: 26,
+        lensFrame: "phone",
+        ev: L.ev,
+      },
+      // Over the right shoulder, the laptop and the lamp.
       demo: {
-        position: [0.2, 1.18, -0.04],
-        target: [0, 0.86, -0.53],
+        position: [0.22, 1.2, -0.08],
+        target: [0, 0.84, -0.56],
         lens: 26,
         lensFrame: "phone",
         ev: L.ev,
       },
-      // Archetype C of docs/design/desk-settings.md: the tablet upright on its stand from high in front, as
-      // a phone held over the desk sees it; close, its screen filling the frame; from the right, three-quarter;
-      // the desk and the painting over it together.
-      "tablet-high": {
-        position: [0, 1.08, -0.25],
-        target: [0, 0.86, -0.53],
-        lens: 26,
-        lensFrame: "phone",
-        ev: L.ev,
-      },
-      "tablet-close": {
-        position: [0, 0.95, -0.27],
-        target: [0, 0.88, -0.53],
-        lens: 26,
-        lensFrame: "phone",
-        ev: L.ev,
-      },
-      "tablet-side": {
-        position: [0.19, 1.0, -0.29],
-        target: [0, 0.87, -0.53],
-        lens: 26,
-        lensFrame: "phone",
-        ev: L.ev,
-      },
+      // The laptop under the painting: the setting.
       "desk-wall": {
         position: [0.05, 1.22, 0.1],
         target: [0.05, 1.08, -0.9],
@@ -430,10 +358,10 @@ export function bedroomDesk(
         ev: L.ev,
       },
     },
-    // The screen's parts from in front and from each side: tablet-<region>-<angle>
+    // The screen's parts from in front and from each side: laptop-<region>-<angle>
     // (components/cameras/screen-shots.ts).
     moves: {
-      ...screenShots("tablet-screen", { prefix: "tablet", ev: L.ev }),
+      ...screenShots("laptop-screen", { prefix: "laptop", ev: L.ev }),
     },
     bake: {
       ...(quality === "release"
@@ -444,9 +372,7 @@ export function bedroomDesk(
       weight: {
         Desk: 2,
         Keyboard: 3,
-        Tablet: 2,
-        TabletStand: 2,
-        Placemat: 2,
+        Laptop: 2,
         Mouse: 2,
         GlobeLamp: 1.5,
       },

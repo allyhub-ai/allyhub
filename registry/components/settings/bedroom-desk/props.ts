@@ -1,13 +1,12 @@
-// The bedroom desk's props: a small pink desk in the corner of a 3.2 × 2.92 m bedroom, by its window.
+// The bedroom desk's props: a small pink desk in the corner of a 3.5 × 2.92 m bedroom, by its window.
 // Blender's axes (Z up): a world point (x, y, z) is (x, -z, y) here. The person sits at the origin
-// facing the desk at +y; the desk's wall is at y = 0.92, the window's wall at x = 0.75 (on the right:
+// facing the desk at +y; the desk's wall is at y = 0.92, the window's wall at x = 1.05 (on the right:
 // the scenery turns the room's shell round), the wall behind the person at y = -2.0.
 //
-// Laid out as popular pastel tablet desks show them (archetype C of docs/design/desk-settings.md):
+// A warm pink desk for a demo on a laptop:
 // - the work zone: a 1.2 × 0.6 m pale pink desk against the wall, its front edge 0.3 m from the person and
-//   its right end 5 cm from the window's wall; an 11-inch tablet upright in portrait on a small stand on a
-//   round rattan placemat at the middle, its pencil beside it, a warm globe lamp at the back left; on the
-//   wall a framed print of Monet's Water Lilies;
+//   its right end 35 cm from the window's wall, clear of the sill; a silver 14-inch laptop centred on it, a warm globe lamp at the
+//   back left; on the wall a framed print of Monet's Water Lilies;
 // - the room behind the person (the room version only): a double bed with white bedding, its head against
 //   the back wall, to the person's left, a nightstand beside it, and the desk chair on a rug.
 // `look` is "day", "overcast", "evening" or "night": the lamp glows at every hour, brighter as it darkens.
@@ -20,16 +19,9 @@ import {
 import { chair } from "../../kit/chair.ts";
 import { desk, DESK_DEFAULTS } from "../../kit/desk.ts";
 import { globeLamp } from "../../kit/desk-items.ts";
-import {
-  tablet,
-  TABLET_DEFAULTS,
-  TABLET_PRESETS,
-  TABLET_STYLUS,
-  stylus,
-} from "../../kit/tablet.ts";
+import { laptop, LAPTOP_PRESETS } from "../../kit/laptop.ts";
 import {
   box,
-  cylinder,
   deg,
   finish,
   group,
@@ -43,17 +35,17 @@ export const TOP = 0.74;
 /** The desk's wall (its back edge 2 cm off it), the wall behind the person, and the window's wall. */
 export const DESK_WALL = 0.92;
 export const BACK_WALL = -2.0;
-export const WINDOW_WALL = 0.75;
-/** The desk: a 1.2 × 0.6 m top, its front edge 0.3 m from the person, its right end 5 cm off the window's wall. */
+export const WINDOW_WALL = 1.05;
+/** The desk: a 1.2 × 0.6 m top, its front edge 0.3 m from the person, its right end 35 cm off the window's wall. */
 export const DESK = { x: 0.1, y: 0.6, width: 1.2, depth: 0.6 };
-/** The placemat's centre: 0.24 m in from the desk's front edge, where the tablet lies. */
-export const PAD_Y = 0.54;
+/** The laptop's centre: 0.26 m in from the desk's front edge. */
+const LAPTOP_Y = 0.56;
 /** The bed: a double (1.4 × 2.0 m mattress), its head against the wall behind the person, on their right. */
 export const BED = { x: -1.55, width: 1.4, length: 2.0, mattress: 0.52 };
 /** The nightstand, between the bed and the desk's corner. */
 export const NIGHTSTAND = { x: -0.58, y: BACK_WALL + 0.22, top: 0.55 };
 
-/** The desk's top, pale pink as the pastel desks of tablet videos are. */
+/** The desk's top, a warm pale pink. */
 const WHITE_TOP: Finish = { color: "#f3c7b8", roughness: 0.45 };
 const WHITE_FRAME: Finish = { color: "#ecebe8", roughness: 0.5, metallic: 0.2 };
 
@@ -71,11 +63,9 @@ export default defineModel((bpy, params) => {
     frame: WHITE_FRAME,
     handset: false,
   });
-  // Archetype C of docs/design/desk-settings.md, made for a demo: the tablet upright in portrait on a small
-  // aluminium stand on a round rattan placemat at the middle, its pencil beside it; the lamp at the back left;
-  // a framed Water Lilies on the wall.
-  placemat(bpy, [0, PAD_Y, top]);
-  standingTablet(bpy, [0, PAD_Y - 0.03, top + mm(6)]);
+  // A demo on a laptop: a silver 14-inch MacBook Pro centred on the desk, nothing but the lamp beside it, and a
+  // framed Water Lilies on the wall.
+  laptop(bpy, [0, LAPTOP_Y, top], LAPTOP_PRESETS.silver);
   globeLamp(bpy, [-0.3, 0.76, top], {
     diameter: mm(200),
     height: mm(210),
@@ -108,97 +98,6 @@ export default defineModel((bpy, params) => {
     weave: { color: "#e3dccf", roughness: 1 },
   });
 });
-
-/** How far the stand leans the tablet back from upright (degrees). */
-const LEAN = 15;
-
-/**
- * An 11-inch tablet upright in portrait on a folding aluminium desk stand (sized like Lamicall's: a 100 ×
- * 120 mm base, a ledge with a lip the tablet's edge rests in, a back plate it leans on at `LEAN`), standing at
- * `at` (the ledge's front, on the surface), with its pencil lying beside the stand. The display is
- * `TabletScreen`, its picture's top the tablet's top.
- */
-function standingTablet(bpy: Bpy, at: Vec3): ModelObject {
-  const root = group(bpy, "TabletStand", at);
-  const metal = finish(bpy, "StandAluminium", {
-    color: "#c9c4c2",
-    roughness: 0.35,
-    metallic: 0.8,
-  });
-  const pad = finish(bpy, "StandPad", { color: "#2b2b2d", roughness: 0.9 });
-  const up = deg(90 - LEAN);
-  // Where the tablet's back edge meets the ledge, and the way up its back.
-  const ledge = mm(12);
-  const dir: Vec3 = [0, Math.cos(up), Math.sin(up)];
-  const back: Vec3 = [0, Math.sin(up), -Math.cos(up)];
-  box(bpy, "TabletStandBase", [mm(100), mm(120), mm(5)], metal, {
-    parent: root,
-    at: [0, mm(50), mm(2.5)],
-    radius: mm(2),
-  });
-  box(bpy, "TabletStandLedge", [mm(90), mm(16), ledge - mm(5)], metal, {
-    parent: root,
-    at: [0, -mm(2), mm(5) + (ledge - mm(5)) / 2],
-    radius: mm(1),
-  });
-  box(bpy, "TabletStandLip", [mm(90), mm(3), mm(9)], metal, {
-    parent: root,
-    at: [0, -mm(10), ledge + mm(3)],
-    radius: mm(1),
-  });
-  box(bpy, "TabletStandPad", [mm(80), mm(1), mm(60)], pad, {
-    parent: root,
-    at: [
-      0,
-      dir[1] * mm(140) + back[1] * mm(1),
-      ledge + dir[2] * mm(140) + back[2] * mm(1),
-    ],
-    rotation: [deg(-LEAN), 0, 0],
-  });
-  box(bpy, "TabletStandPlate", [mm(80), mm(4), mm(170)], metal, {
-    parent: root,
-    at: [
-      0,
-      dir[1] * mm(85) + back[1] * mm(3.5),
-      ledge + dir[2] * mm(85) + back[2] * mm(3.5),
-    ],
-    rotation: [deg(-LEAN), 0, 0],
-    radius: mm(1.5),
-  });
-  // The tablet: its back on the plate's pad, its bottom edge on the ledge, in portrait.
-  const [w] = TABLET_DEFAULTS.body;
-  const lean = group(
-    bpy,
-    "TabletLean",
-    [0, dir[1] * (w / 2), ledge + dir[2] * (w / 2)],
-    root,
-  );
-  lean.rotation_euler = [up, 0, 0];
-  const pad3 = group(bpy, "TabletPortrait", [0, 0, 0], lean);
-  pad3.rotation_euler = [0, 0, deg(90)];
-  tablet(bpy, [0, 0, 0], { ...TABLET_PRESETS.silver }, pad3);
-  // The pencil on the mat, beside the stand, turned a little.
-  const lying = group(bpy, "PencilLying", [mm(120), -mm(20), 0], root);
-  lying.rotation_euler = [0, 0, deg(25)];
-  stylus(bpy, TABLET_STYLUS, [0, 0, 0], lying);
-  return root;
-}
-
-/**
- * A round coiled rattan placemat, 35 cm across and 6 mm thick, its edge rounded; its weave is a picture the
- * scenery lays on its top (`PlacematTop`).
- */
-function placemat(bpy: Bpy, at: Vec3): ModelObject {
-  const root = group(bpy, "Placemat", at);
-  const cane = finish(bpy, "Rattan", { color: "#d6b783", roughness: 0.85 });
-  cylinder(bpy, "PlacematTop", mm(175), mm(6), cane, {
-    parent: root,
-    at: [0, 0, mm(3.5)],
-    segments: 96,
-    radius: mm(2.5),
-  });
-  return root;
-}
 
 /**
  * A double bed, its head against the wall at y = `at[1]`, centred on x = `at[0]`, its foot towards +y: an

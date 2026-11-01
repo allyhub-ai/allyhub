@@ -1,0 +1,3 @@
+display_name: "簡報"
+short_description: "有設計感、屬於你品牌的簡報"
+default_prompt: "使用 brand-decks 技能：製作一份關於[主題]的簡報，給[誰]看，讓他們[做什麼]。"

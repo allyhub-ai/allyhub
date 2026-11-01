@@ -2,4 +2,4 @@
 import { defineScenery } from "@allyhub-next/scenery-host/layer";
 import { gamingSetup } from "../../components/settings/gaming-setup/scenery.ts";
 
-export default defineScenery(gamingSetup("day", "demo", "preview"));
+export default defineScenery(gamingSetup("day", "demo", "release"));

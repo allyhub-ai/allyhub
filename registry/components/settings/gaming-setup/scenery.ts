@@ -1,138 +1,144 @@
-// The gaming setup as a scenery: a dark room, its props, its LED strips and lit fans, and its light in
-// physical units, by day, on an overcast day, at evening or at night. A scenery item calls `gamingSetup(look)`.
+// The gaming setup as a scenery: a pale room with its own light off, coloured by two light bars behind the
+// monitor, in physical units. A scenery item calls `gamingSetup(look)`.
 import * as THREE from "three";
 import { RectAreaLightUniformsLib } from "three/addons/lights/RectAreaLightUniformsLib.js";
 import {
   exposureOf,
   type SceneryDefinition,
-  type SceneryHost,
 } from "@allyhub-next/scenery-host/layer";
 import { modelObject } from "@allyhub-next/model/three";
 import { shell } from "../../room/shell.ts";
-import { browserPage, screenOver } from "../../room/screens.ts";
+import { screenOver } from "../../room/screens.ts";
 import { screenShots } from "../../cameras/screen-shots.ts";
-import props, {
-  DESK_WALL,
-  DESK_Y,
-  LEDS,
-  TOP,
-  TOWER,
-  WALL_SHELVES,
-} from "./props.ts";
+import props, { BAR_GLOW, BARS, DESK_WALL, LEDS, TOP } from "./props.ts";
 
 export type Look = "day" | "overcast" | "evening" | "night";
 /** The whole room (a talking head, a desk tour) or the desk and its wall alone (a demo filmed close). */
 export type Version = "room" | "demo";
 
 /**
- * Each look's light, in physical units (lumens, candela, nits) and its camera's exposure (EV at ISO 100).
- * Darker than the other settings at every hour: the blind kept down, the walls dark, the LEDs the colour.
+ * Each look's light, in physical units (nits) and its camera's exposure (EV at ISO 100). `bars` is a light
+ * bar's diffuser, some 6000 nits for a Hue Play's 530 lumens through a saturated colour; the room's own light
+ * stays off. `sky` is what the blind lets in. `monitor` is its white, `wallpaper` its idle picture, `tint` and
+ * `throw` (nits) the colour and strength of the light it casts on the desk.
  */
 const LOOKS = {
   day: {
-    // A dark room, exposed to be seen: its light is a sixth of the home desk's, its exposure 1.8 stops over.
-    ev: 4.8,
-    /** The sky through the window, the blind more than half down. */
-    sky: 3500,
-    blind: 0.55,
-    ceiling: 0,
-    monitor: 170,
-    /** The LED strips' light (nits): under the desk's back edge, under the shelves; and the tower's open side. */
-    desk: 150,
-    shelf: 120,
-    tower: 10,
+    ev: 6.1,
+    sky: 700,
+    blind: 0.8,
+    bars: 13000,
+    monitor: 200,
+    throw: 200,
+    wallpaper: ["#0b1c4a", "#1a6fd6", "#27d6e8", "#ffe28a"],
+    tint: "#7fb4ff",
   },
   overcast: {
-    ev: 4.4,
-    /** A grey sky through the same blind; the ceiling light on low. */
-    sky: 1300,
-    blind: 0.55,
-    ceiling: 500,
+    ev: 5.7,
+    sky: 320,
+    blind: 0.85,
+    bars: 13000,
     monitor: 170,
-    desk: 200,
-    shelf: 160,
-    tower: 13,
+    throw: 200,
+    wallpaper: ["#1a0b4a", "#6a2fd6", "#e24bd0", "#ffd08a"],
+    tint: "#b08aff",
   },
   evening: {
-    ev: 5.6,
-    /** The sun gone, the blind nearly down: the strips violet and pink. */
-    sky: 250,
-    blind: 0.85,
-    ceiling: 0,
-    monitor: 160,
-    desk: 2500,
-    shelf: 2000,
-    tower: 110,
+    ev: 5.1,
+    sky: 30,
+    blind: 0.9,
+    bars: 13000,
+    monitor: 130,
+    throw: 200,
+    wallpaper: ["#160a3c", "#2f4bd6", "#ff3fa4", "#ffd08a"],
+    tint: "#c07aff",
   },
   night: {
-    ev: 5.2,
-    /** The blind down: pink under the desk, cyan under the shelves, the screens. */
+    ev: 4.6,
     sky: 2,
     blind: 1,
-    ceiling: 0,
-    monitor: 150,
-    desk: 6500,
-    shelf: 5000,
-    tower: 320,
+    bars: 13000,
+    monitor: 100,
+    throw: 200,
+    wallpaper: ["#12073a", "#5a22d0", "#ff2d95", "#ffb347"],
+    tint: "#b070ff",
   },
 } as const;
 
 /** What glows is drawn, but its light is the light standing for it: baking both would count it twice. */
-const GLOWS = [
-  "ceiling-light",
-  "DeskStripLed",
-  "ShelfStripLed1",
-  "ShelfStripLed2",
-  "PcTowerFans",
-  "monitor-screen",
-  "laptop-screen",
-];
-
-/** A Poly Haven model, placed: where it stands (world), its turn about y (degrees) and scale. */
-async function place(
-  w: SceneryHost,
-  name: string,
-  file: string,
-  at: [number, number, number],
-  turn = 0,
-  scale = 1,
-): Promise<THREE.Group> {
-  const model = await w.load(file);
-  model.name = name;
-  model.position.set(...at);
-  model.rotation.y = THREE.MathUtils.degToRad(turn);
-  model.scale.setScalar(scale);
-  w.scene.add(model);
-  return model;
-}
+const GLOWS = ["monitor-screen"];
+/** The wallpaper's white against the monitor's: tone mapping washes a saturated picture out at full brightness. */
+const WALLPAPER = 0.45;
 
 /**
- * A row of the first `count` books of Poly Haven's encyclopedia set, at their own size (each about 23 cm tall,
- * 17.5 cm deep and 2.7 cm thick), standing with the row's middle at `at` and their spines facing `turn`.
+ * The monitor's wallpaper, drawn in code: a saturated dusk over mountains and a lit city, the colours its own
+ * look's (`sky`, top to horizon, then the low sun). `width` × `height` px; the same each time.
  */
-async function bookRow(
-  w: SceneryHost,
-  name: string,
-  file: string,
-  at: [number, number, number],
-  turn: number,
-  count: number,
-): Promise<THREE.Group> {
-  const set = await w.load(file);
-  const gone = set.children.filter(
-    (c) => Number(/book(\d+)$/u.exec(c.name)?.[1] ?? 0) > count,
-  );
-  for (const c of gone) c.removeFromParent();
-  const box = new THREE.Box3().setFromObject(set);
-  const middle = box.getCenter(new THREE.Vector3());
-  set.position.set(-middle.x, -box.min.y, -middle.z);
-  const row = new THREE.Group();
-  row.name = name;
-  row.add(set);
-  row.position.set(...at);
-  row.rotation.y = THREE.MathUtils.degToRad(turn);
-  w.scene.add(row);
-  return row;
+function neonWallpaper(
+  width: number,
+  height: number,
+  colours: readonly [string, string, string, string],
+): THREE.CanvasTexture {
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  const g = canvas.getContext("2d");
+  if (!g) throw new Error("No 2D context.");
+  const [high, mid, low, sun] = colours;
+  const horizon = height * 0.62;
+  const sky = g.createLinearGradient(0, 0, 0, horizon);
+  sky.addColorStop(0, high);
+  sky.addColorStop(0.6, mid);
+  sky.addColorStop(1, low);
+  g.fillStyle = sky;
+  g.fillRect(0, 0, width, horizon);
+  g.fillStyle = sun;
+  g.beginPath();
+  g.arc(width * 0.62, height * 0.34, height * 0.12, 0, Math.PI * 2);
+  g.fill();
+  let seed = 7;
+  const rand = (): number => {
+    seed = (seed * 16807) % 2147483647;
+    return seed / 2147483647;
+  };
+  // Two ridges, far and near.
+  for (const [base, tall, shade] of [
+    [0.6, 0.16, mid],
+    [0.66, 0.1, high],
+  ] as const) {
+    g.fillStyle = shade;
+    g.beginPath();
+    g.moveTo(0, horizon * 1.2);
+    let x = 0;
+    while (x < width) {
+      g.lineTo(x, height * (base - tall * rand()));
+      x += width * (0.03 + 0.05 * rand());
+    }
+    g.lineTo(width, horizon * 1.2);
+    g.fill();
+  }
+  // The city: towers with lit windows, down to the bottom of the screen.
+  g.fillStyle = high;
+  g.fillRect(0, height * 0.7, width, height * 0.3);
+  let x = 0;
+  while (x < width) {
+    const w = width * (0.025 + 0.04 * rand());
+    const h = height * (0.14 + 0.26 * rand());
+    const y = height - h;
+    g.fillStyle = "#0a0824";
+    g.fillRect(x, y, w, h);
+    const lit = rand() < 0.5 ? low : sun;
+    g.fillStyle = lit;
+    const cell = width * 0.009;
+    for (let wy = y + cell; wy < height; wy += cell * 2)
+      for (let wx = x + cell * 0.6; wx < x + w - cell; wx += cell * 1.7)
+        if (rand() < 0.55) g.fillRect(wx, wy, cell * 0.9, cell);
+    x += w + width * 0.004;
+  }
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.anisotropy = 8;
+  return texture;
 }
 
 /** A rectangle light named `name`, at `at`, shining towards `to`. */
@@ -140,7 +146,7 @@ function pane(
   name: string,
   color: THREE.ColorRepresentation,
   nits: number,
-  size: [number, number],
+  size: readonly [number, number],
   at: THREE.Vector3,
   to: THREE.Vector3,
 ): THREE.RectAreaLight {
@@ -164,8 +170,6 @@ export function gamingSetup(
 ): SceneryDefinition {
   const L = LOOKS[look];
   const led = LEDS[look];
-  const books =
-    "assets/media/models/book_encyclopedia_set_01/book_encyclopedia_set_01_1k.gltf";
   return {
     renderer: { antialias: true },
     async build(w) {
@@ -180,20 +184,20 @@ export function gamingSetup(
       w.scene.environmentIntensity = L.sky;
       w.scene.backgroundIntensity = L.sky;
 
-      // The home desk's room, its desk's wall 5 cm further back, painted a dark grey, its blind further down.
+      // The home desk's room, its desk's wall brought up to the desk, painted pale so it takes the colours.
       w.scene.add(
         await shell(w, {
           front: -DESK_WALL,
-          paint: "#3a3c42",
-          ceiling: "#2e3034",
+          paint: "#dcdad6",
+          ceiling: "#d8d7d4",
           window: {
-            z: -0.45,
+            z: -0.35,
             width: 1.2,
             sill: 0.85,
             height: 1.3,
             blind: L.blind,
           },
-          skirting: { height: 0.08, depth: 0.012, color: "#2e3034" },
+          skirting: { height: 0.06, depth: 0.012, color: "#d8d7d4" },
         }),
       );
 
@@ -203,116 +207,33 @@ export function gamingSetup(
       w.scene.add(kit);
       kit.updateMatrixWorld(true);
 
-      // The screens: named planes a video's screen() draws on, showing an idle page (dark) until then.
-      const idle = new THREE.MeshBasicMaterial({
-        map: browserPage(2560, 1440, false, 1920),
+      // The screens: named surfaces a video's screen() draws on, showing an idle picture until then.
+      const wallpaper = new THREE.MeshBasicMaterial({
+        map: neonWallpaper(2560, 1440, L.wallpaper),
       });
-      idle.color.setScalar(L.monitor);
-      kit.add(screenOver(kit, "MonitorScreen", "monitor-screen", idle));
-      const lapIdle = new THREE.MeshBasicMaterial({
-        map: browserPage(3024, 1964, false, 1512),
-      });
-      lapIdle.color.setScalar(L.monitor * 0.9);
-      kit.add(
-        screenOver(kit, "LaptopScreen", "laptop-screen", lapIdle, {
-          up: [0, -1, 0],
-          out: [0, 0, -1],
-        }),
-      );
+      wallpaper.color.setScalar(L.monitor * WALLPAPER);
+      kit.add(screenOver(kit, "MonitorScreen", "monitor-screen", wallpaper));
 
-      // Books and a plant on the shelves (world: the desk's wall at z = -1.15).
-      const shelfZ = -(DESK_WALL - WALL_SHELVES.depth / 2);
-      const [left = -0.58, right = 0.58] = WALL_SHELVES.x;
-      await bookRow(
-        w,
-        "books-shelf",
-        books,
-        [right - 0.08, WALL_SHELVES.top, shelfZ],
-        0,
-        6,
-      );
-      await place(
-        w,
-        "plant-shelf",
-        "assets/media/models/potted_plant_04/potted_plant_04_1k.gltf",
-        [left + 0.2, WALL_SHELVES.top, shelfZ],
-        20,
-        0.8,
-      );
-
-      // The ceiling fitting, and the area light that stands for it.
-      const size = 0.32;
-      const ceilingNits = L.ceiling / (Math.PI * size * size);
-      const fitting = new THREE.Mesh(
-        new THREE.CylinderGeometry(size / 2 + 0.02, size / 2 + 0.02, 0.06, 48),
-        new THREE.MeshStandardMaterial({
-          color: "#ffffff",
-          emissive: "#fff3e2",
-          emissiveIntensity: Math.max(ceilingNits, 0.2),
-          roughness: 0.6,
-        }),
-      );
-      fitting.name = "ceiling-light";
-      fitting.position.set(0, 2.57, 0.35);
-      w.scene.add(fitting);
-      if (L.ceiling > 0)
-        w.scene.add(
-          pane(
-            "ceiling-light-area",
-            "#fff1dc",
-            ceilingNits,
-            [size, size],
-            new THREE.Vector3(0, 2.53, 0.35),
-            new THREE.Vector3(0, 0, 0.35),
-          ),
-        );
-
-      // The strip under the desk's back edge, washing the wall behind the monitor (5 cm behind it) up and down.
-      const strip = new THREE.Vector3(0, TOP - 0.031, -(DESK_Y + 0.4 - 0.002));
-      w.scene.add(
-        pane(
-          "desk-strip",
-          led.desk,
-          L.desk,
-          [1.5, 0.01],
-          strip,
-          new THREE.Vector3(0, strip.y + 0.25, strip.z - 1),
-        ),
-      );
-      // The strips under the shelves, down the wall onto the desk.
-      WALL_SHELVES.x.forEach((x, i) => {
+      // A pane on each light bar's diffuser, turned to the wall: all the colour in the room.
+      for (const side of [-1, 1] as const) {
+        const turn = THREE.MathUtils.degToRad(side * BARS.turn);
+        const facing = new THREE.Vector3(Math.sin(turn), 0, -Math.cos(turn));
         const at = new THREE.Vector3(
-          x,
-          WALL_SHELVES.top - 0.032,
-          -(DESK_WALL - WALL_SHELVES.depth + 0.02),
-        );
+          side * BARS.x,
+          TOP + BARS.z + BAR_GLOW.height,
+          -BARS.y,
+        ).addScaledVector(facing, 0.02);
         w.scene.add(
           pane(
-            `shelf-strip-${String(i + 1)}`,
-            led.shelf,
-            L.shelf,
-            [WALL_SHELVES.width - 0.04, 0.01],
+            side < 0 ? "bar-left" : "bar-right",
+            side < 0 ? led.left : led.right,
+            L.bars,
+            [BAR_GLOW.size[0], BAR_GLOW.size[1]],
             at,
-            at.clone().setY(at.y - 1),
+            at.clone().add(facing),
           ),
         );
-      });
-      // The tower's lit inside, through its open side towards the monitor.
-      const side = new THREE.Vector3(
-        TOWER.x + TOWER.size[0] / 2 + 0.003,
-        TOP + TOWER.size[2] / 2,
-        -TOWER.y,
-      );
-      w.scene.add(
-        pane(
-          "tower-glow",
-          led.fans,
-          L.tower,
-          [TOWER.size[1] - 0.04, TOWER.size[2] - 0.06],
-          side,
-          side.clone().setX(side.x + 1),
-        ),
-      );
+      }
 
       // The monitor's steady light: a pane on its face, which a video's screen then adds its picture's difference to.
       const screen = kit.getObjectByName("monitor-screen");
@@ -327,8 +248,8 @@ export function gamingSetup(
         w.scene.add(
           pane(
             "monitor-light",
-            "#e8eefc",
-            L.monitor,
+            L.tint,
+            L.throw,
             [g.parameters.width, g.parameters.height],
             at,
             at.clone().add(normal),
@@ -338,92 +259,43 @@ export function gamingSetup(
       return {};
     },
     cameras: {
-      // The talking head: a phone at 1.2 m, 0.6 m from the face (medians of popular demo videos).
-      talking: {
-        position: [0, 1.2, -0.7],
-        target: [0, 1.15, -0.1],
+      // Archetype D of docs/design/desk-settings.md. Square on and low: the monitor, the keys, the microphone and
+      // the two colours on the wall.
+      front: {
+        position: [-0.05, 1.03, 0.36],
+        target: [-0.05, 0.98, -0.8],
         lens: 26,
         lensFrame: "phone",
         ev: L.ev,
       },
-      // The demo: over the shoulder, looking down at the keyboard and screen.
+      // Behind the shoulder, over the keyboard: the monitor and the keys.
       demo: {
-        position: [0.3, 1.34, 0.12],
-        target: [0, 0.9, -0.74],
+        position: [0.18, 1.24, 0.14],
+        target: [-0.02, 0.9, -0.8],
         lens: 26,
         lensFrame: "phone",
         ev: L.ev,
       },
-      // The desk from straight above the hands.
-      overhead: {
-        position: [0.04, 1.36, -0.32],
-        target: [0.04, 0.74, -0.6],
-        lens: 26,
-        lensFrame: "phone",
-        ev: L.ev,
-      },
-      // The keyboard from high on its left, looking down across it at the monitor (the home desk's camera,
-      // solved from a popular demo's frame; the keyboard stands at the same place).
-      "hands-keyboard": {
-        position: [-0.328, 1.271, -0.188],
-        yaw: -31.3,
-        pitch: -31.1,
-        roll: 0.1,
-        lens: 26,
-        lensFrame: "phone",
-        ev: L.ev,
-      },
-      // The laptop from behind where the hands go: solved from a popular demo's frame by its screen's corners.
-      "laptop-over-hands": {
-        position: [0.487, 1.143, -0.397],
-        yaw: -9.2,
-        pitch: -26.9,
-        roll: 0.1,
-        lens: 26,
-        lensFrame: "phone",
-        ev: L.ev,
-      },
-      // Low over the laptop's keys, 10 cm above the desk: solved from a popular demo's frame by the screen's edges, its pitch
-      // fixed at the frame's look along the keys.
+      // Low across the keys, lit by their backlight, the screen above.
       "keys-low": {
-        position: [0.529, 0.838, -0.575],
-        yaw: -8.4,
-        pitch: -12,
-        roll: 0.3,
+        position: [0.08, 0.86, -0.08],
+        target: [0, 0.93, -0.85],
         lens: 26,
         lensFrame: "phone",
         ev: L.ev,
       },
       // The setup seen from beside the person, as a desk tour shows it.
       setup: {
-        position: [-1.2, 1.4, 0.55],
+        position: [-0.7, 1.35, 0.45],
         target: [0.05, 0.95, -0.7],
         lens: 20,
         ev: L.ev,
       },
-      // For review: the wall behind the person, the desk from above, the room from each side and its corner.
-      wall: {
-        position: [0, 1.3, -0.75],
-        target: [0, 1.3, 1.8],
-        lens: 15,
-        ev: L.ev,
-      },
+      // For review: the desk from above, the room from a corner.
       desktop: {
         position: [0, 1.8, -0.1],
-        target: [0, 0.74, -0.72],
+        target: [0, 0.74, -0.62],
         lens: 16,
-        ev: L.ev,
-      },
-      left: {
-        position: [-1.6, 1.5, 0.2],
-        target: [0.2, 0.95, -0.45],
-        lens: 15,
-        ev: L.ev,
-      },
-      right: {
-        position: [1.6, 1.5, 0.5],
-        target: [-0.2, 0.95, -0.35],
-        lens: 15,
         ev: L.ev,
       },
       overview: {
@@ -433,27 +305,26 @@ export function gamingSetup(
         ev: L.ev,
       },
     },
-    // The screens' parts from in front and from each side: monitor-<region>-<angle>, laptop-<region>-<angle>
+    // The monitor's parts from in front and from each side: monitor-<region>-<angle>
     // (components/cameras/screen-shots.ts).
     moves: {
       ...screenShots("monitor-screen", { prefix: "monitor", ev: L.ev }),
-      ...screenShots("laptop-screen", { prefix: "laptop", ev: L.ev }),
     },
     bake: {
       ...(quality === "release"
         ? { density: 75, samples: 512, bounces: 8, maxSize: 8192 }
         : { density: 50, samples: 32, bounces: 4 }),
-      // Light in physical units: a sample from the sky or an LED is thousands of nits, so the firefly clamp is too.
+      // Light in physical units: a sample from the sky or a lamp is thousands of nits, so the firefly clamp is too.
       clamp: 60000,
       weight: {
         Desk: 2,
+        LitMat: 4,
         Keyboard: 3,
         Monitor: 1.5,
-        Laptop: 2,
-        Mouse: 2,
-        PcTower: 1.5,
+        UsbMic: 3,
+        Mouse: 5,
       },
-      ignore: [...GLOWS, "Mannequin"],
+      ignore: [...GLOWS, "Mannequin", "UsbMicGrille"],
       probe: { at: [0, 1.2, -0.2], hide: GLOWS },
     },
   };

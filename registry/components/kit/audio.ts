@@ -19,6 +19,7 @@ import {
   group,
   lathe,
   mm,
+  solid,
   strut,
   type Finish,
 } from "./parts.ts";
@@ -431,5 +432,663 @@ export function speaker(
     at: [0, -d / 2 - mm(0.3), pz],
     radius: ph / 2 - mm(0.1),
   });
+  return root;
+}
+
+export interface UsbMicOptions {
+  /** The body, the collar under the grille, the wire of the grille, the knobs and the felt under the base. */
+  body: Finish;
+  collar: Finish;
+  wire: Finish;
+  knob: Finish;
+  felt: Finish;
+  /** The light in the mute button. */
+  led: Finish;
+  /** The grille's wire: its pitch and radius (m). */
+  pitch: number;
+  wireRadius: number;
+  /** Where the USB cable runs from the socket under the body, in the microphone's space (m); none for no cable. */
+  cable: Vec3[];
+}
+
+/** The Yeti Blackout: matte black. */
+export const USB_MIC_DEFAULTS: UsbMicOptions = {
+  body: { color: "#141416", roughness: 0.42, metallic: 0.5 },
+  collar: { color: "#101012", roughness: 0.36, metallic: 0.5 },
+  wire: { color: "#1b1b1e", roughness: 0.4, metallic: 0.8 },
+  knob: { color: "#121214", roughness: 0.5, metallic: 0.2 },
+  felt: { color: "#0d0d0e", roughness: 1 },
+  led: {
+    color: "#ff2a1e",
+    roughness: 0.3,
+    emission: { color: "#ff2a1e", strength: 6 },
+  },
+  pitch: mm(2.6),
+  wireRadius: mm(0.34),
+  cable: [],
+};
+
+export const USB_MIC_PRESETS = {
+  blackout: {},
+  // The Yeti in silver: a chrome collar and a bright woven grille.
+  silver: {
+    body: { color: "#8e9093", roughness: 0.55, metallic: 1 },
+    collar: { color: "#e8e8e8", roughness: 0.08, metallic: 1 },
+    wire: { color: "#c9c9c7", roughness: 0.3, metallic: 1 },
+    knob: { color: "#9a9c9f", roughness: 0.4, metallic: 1 },
+  },
+} satisfies Record<string, Partial<UsbMicOptions>>;
+
+/** A polyline through `points`, each span cut in `n` by Catmull-Rom: its ends stay where they are. */
+function smoothed(points: number[][], n: number): number[][] {
+  const out: number[][] = [];
+  const last = points.length - 1;
+  for (let i = 0; i < last; i++) {
+    const [a, b, c, d] = [i - 1, i, i + 1, i + 2].map(
+      (k) => points[Math.min(last, Math.max(0, k))] as number[],
+    ) as [number[], number[], number[], number[]];
+    for (let j = 0; j < n; j++) {
+      const t = j / n;
+      out.push(
+        b.map((_, k) => {
+          const [p0, p1, p2, p3] = [
+            a[k] as number,
+            b[k] as number,
+            c[k] as number,
+            d[k] as number,
+          ];
+          return (
+            0.5 *
+            (2 * p1 +
+              (p2 - p0) * t +
+              (2 * p0 - 5 * p1 + 4 * p2 - p3) * t * t +
+              (3 * p1 - p0 - 3 * p2 + p3) * t * t * t)
+          );
+        }),
+      );
+    }
+  }
+  out.push(points[last] as number[]);
+  return out;
+}
+
+/** A closed skin through rings of as many points each, shut at both ends. */
+function loft(
+  bpy: Bpy,
+  name: string,
+  rings: Vec3[][],
+  material: ModelMaterial,
+  o: { parent?: ModelObject; smooth?: boolean } = {},
+): ModelObject {
+  const n = rings[0]?.length ?? 0;
+  const faces: number[][] = [];
+  for (let j = 0; j + 1 < rings.length; j++)
+    for (let i = 0; i < n; i++) {
+      const [a, b] = [j * n + i, j * n + ((i + 1) % n)];
+      faces.push([a, b, b + n, a + n]);
+    }
+  faces.push(
+    [...Array(n).keys()].reverse(),
+    [...Array(n).keys()].map((i) => (rings.length - 1) * n + i),
+  );
+  return solid(bpy, name, rings.flat(), faces, material, {
+    parent: o.parent,
+    smooth: o.smooth ?? true,
+  });
+}
+
+/** A rounded rectangle's outline, half sizes `a` and `b`, corners `c`, as [along a, along b] from its centre. */
+function roundedOutline(a: number, b: number, c: number): [number, number][] {
+  const r = Math.min(c, a * 0.9, b * 0.9);
+  const out: [number, number][] = [];
+  for (const [sx, sy, from] of [
+    [1, 1, 0],
+    [-1, 1, 90],
+    [-1, -1, 180],
+    [1, -1, 270],
+  ] as const)
+    for (let i = 0; i <= 3; i++) {
+      const t = deg(from + i * 30);
+      out.push([
+        sx * (a - r) + r * Math.cos(t),
+        sy * (b - r) + r * Math.sin(t),
+      ]);
+    }
+  return out;
+}
+
+/**
+ * A desk USB microphone on its cast stand (Blue Yeti). 295 mm tall in its stand and 120 mm across its base (the
+ * maker's 11.61 × 4.72 in); the rest measured on photographs, scaled by that height: a 68 mm body, a 63 mm grille,
+ * 100 mm across the side knobs (the maker's 4.92 in width is more than any photograph shows). The stand is a
+ * two-legged arch that sweeps back to a strap round the back of the body, which rises at each side to a pivot. It
+ * stands on z = 0, its front (mute, volume) towards -y; gain and pattern are on its back.
+ */
+export function usbMic(
+  bpy: Bpy,
+  at: Vec3,
+  options: Partial<UsbMicOptions> = {},
+  parent?: ModelObject,
+): ModelObject {
+  const f = { ...USB_MIC_DEFAULTS, ...options };
+  const root = group(bpy, "UsbMic", at, parent);
+  const body = finish(bpy, "UsbMicBody", f.body);
+  const knob = finish(bpy, "UsbMicKnob", f.knob);
+  const profile = (points: number[][]): [number, number][] =>
+    points.map(([r, z]) => [mm(r as number), mm(z as number)]);
+
+  // The base: felt under a flared disc with a flat top.
+  lathe(
+    bpy,
+    "UsbMicFelt",
+    profile([
+      [0, 0],
+      [56, 0],
+      [56, 2],
+      [0, 2],
+    ]),
+    finish(bpy, "UsbMicFelt", f.felt),
+    { parent: root },
+  );
+  const rimBase = smoothed(
+    [
+      [59, 2],
+      [60, 3.5],
+      [60, 7],
+      [58.5, 9],
+      [53, 12],
+      [47, 15.5],
+      [45, 17.2],
+    ],
+    4,
+  );
+  lathe(
+    bpy,
+    "UsbMicBase",
+    profile([
+      [0, 2],
+      ...rimBase,
+      [44.6, 17.6],
+      [44.3, 18.6],
+      [43.4, 19],
+      [0, 19],
+    ]),
+    body,
+    { parent: root, steps: 96 },
+  );
+
+  // The stand, its outline in x and z (the front photograph's): a pair of outer and inner edges from each foot to
+  // the crown, a section across each pair, the whole swept back as it rises to the strap.
+  const half = [
+    [-33, 17, -19, 17],
+    [-33, 35, -19.5, 35],
+    [-31.5, 52, -19, 50],
+    [-28, 68, -17, 60],
+    [-23.5, 82, -13, 68],
+    [-18.5, 93, -8, 73],
+    [-15.5, 103, -4, 75],
+    [-17, 112, -1.5, 75.5],
+  ];
+  const pairs = smoothed(
+    [
+      ...half,
+      [0, 113, 0, 75.6],
+      ...half
+        .map(([a, b, c, d]) => [
+          -(a as number),
+          b as number,
+          -(c as number),
+          d as number,
+        ])
+        .reverse(),
+    ],
+    3,
+  );
+  const sweep = (z: number): [number, number] => {
+    const t = Math.min(1, Math.max(0, (z - 19) / 91));
+    const s = t * t * (3 - 2 * t);
+    // Its depth's centre and half depth: from under the body back to the strap, thinner as it goes.
+    // Its top narrows into the strap, so nothing of it stands proud under the body.
+    const top = Math.min(1, Math.max(0, (z - 92) / 21));
+    return [-6 + 53 * s, 13 - 2.5 * s - 7 * top * top];
+  };
+  const standRing = (p: number[]): Vec3[] => {
+    const [ox, oz, ix, iz] = p as [number, number, number, number];
+    const [cx, cz] = [(ox + ix) / 2, (oz + iz) / 2];
+    const across = Math.hypot(ox - ix, oz - iz) / 2;
+    const [ux, uz] = [(ox - ix) / (2 * across), (oz - iz) / (2 * across)];
+    // A unit deep here: each point takes the depth of its own height.
+    return roundedOutline(across, 1, 0.45).map(([a, b]) => {
+      const [x, z] = [cx + ux * a, cz + uz * a];
+      const [centre, depth] = sweep(z);
+      return [mm(x), mm(centre + b * depth), mm(z)];
+    });
+  };
+  loft(bpy, "UsbMicStand", pairs.map(standRing), body, { parent: root });
+
+  // The strap: from the front of one pivot round the back of the body to the other. Along its length: how far from
+  // its tip, then its top and bottom edges there (mm).
+  const heights = smoothed(
+    [
+      [0, 165, 165],
+      [1.2, 169, 158],
+      [4, 173.5, 142],
+      [9, 176.6, 129],
+      [16, 178, 119],
+      [24, 175.5, 112],
+      [34, 162, 106],
+      [44, 148, 103],
+      [55, 138, 101],
+      [66, 143, 100],
+      [74, 150, 100],
+      [78.5, 148, 100],
+      [81, 130, 100],
+      [83.5, 124, 100],
+      [86, 123, 100],
+    ],
+    4,
+  );
+  const STRAP_RADIUS = 41;
+  const STRAP_BACK = 6;
+  const STRAIGHT = 22;
+  const onStrap = (a: number, side: 1 | -1, r: number): [number, number] => {
+    if (a <= STRAIGHT) return [side * r, -16 + a];
+    const t = (a - STRAIGHT) / STRAP_RADIUS;
+    return [side * r * Math.cos(t), STRAP_BACK + r * Math.sin(t)];
+  };
+  const strapRing = (h: number[], side: 1 | -1): Vec3[] => {
+    const [a, top, bottom] = h as [number, number, number];
+    const [mid, up] = [(top + bottom) / 2, Math.max(0.1, (top - bottom) / 2)];
+    return roundedOutline(1.8, up, 1.2).map(([t, u]) => {
+      const [x, y] = onStrap(a, side, STRAP_RADIUS + t);
+      return [mm(x), mm(y), mm(mid + u)];
+    });
+  };
+  loft(
+    bpy,
+    "UsbMicStrap",
+    [
+      ...heights.map((h) => strapRing(h, -1)),
+      ...heights
+        .slice(0, -1)
+        .reverse()
+        .map((h) => strapRing(h, 1)),
+    ],
+    body,
+    { parent: root },
+  );
+
+  // The body and the socket under it.
+  const shoulder = smoothed(
+    [
+      [14, 115],
+      [27, 115.2],
+      [31, 116.6],
+      [33.4, 120],
+      [34, 126],
+    ],
+    4,
+  );
+  lathe(
+    bpy,
+    "UsbMicBody",
+    profile([
+      [0, 110],
+      [11, 110],
+      [12, 111],
+      [12, 115],
+      ...shoulder,
+      [34, 232],
+      [33.6, 232.6],
+      [0, 232.6],
+    ]),
+    body,
+    { parent: root, steps: 96 },
+  );
+  lathe(
+    bpy,
+    "UsbMicCollar",
+    profile([
+      [0, 232.5],
+      [33.6, 232.5],
+      [35.2, 233.4],
+      [35.6, 235],
+      [35.6, 239.4],
+      [35, 241],
+      [32.8, 241.4],
+      [32.8, 240],
+      [0, 240],
+    ]),
+    finish(bpy, "UsbMicCollar", f.collar),
+    { parent: root, steps: 96 },
+  );
+
+  // The grille: dark foam, then the wire, a flat square weave turned 45° pressed over the dome from its top. Along
+  // the dome's outline from the top: its radius and height.
+  const dome = smoothed(
+    [
+      [0, 295],
+      [10.6, 292.4],
+      [20.8, 286.3],
+      [28, 276.6],
+      [31, 267],
+      [31.6, 258],
+      [31.6, 248],
+      [31.6, 239],
+    ],
+    6,
+  ) as [number, number][];
+  lathe(
+    bpy,
+    "UsbMicFoam",
+    profile([
+      ...dome.map(([r, z]) => [Math.max(0, r - 1.2), z - 1.2]),
+      [0, 239],
+    ]),
+    finish(bpy, "UsbMicFoam", { color: "#050506", roughness: 1 }),
+    { parent: root, steps: 64 },
+  );
+  const lengths = dome.reduce<number[]>((out, [r, z], i) => {
+    const [pr, pz] = (dome[i - 1] ?? [r, z]) as [number, number];
+    out.push((out[i - 1] ?? 0) + Math.hypot(r - pr, z - pz));
+    return out;
+  }, []);
+  const reach = lengths[lengths.length - 1] as number;
+  // The dome's radius, height and outward normal at a length along it.
+  const onDome = (s: number): [number, number, number, number] => {
+    const k = Math.max(
+      0,
+      lengths.findIndex((l) => l >= s),
+    );
+    const i = Math.max(1, k);
+    const [a, b] = [dome[i - 1], dome[i]] as [
+      [number, number],
+      [number, number],
+    ];
+    const [la, lb] = [lengths[i - 1] as number, lengths[i] as number];
+    const t = lb > la ? (s - la) / (lb - la) : 0;
+    const [dr, dz] = [(b[0] - a[0]) / (lb - la), (b[1] - a[1]) / (lb - la)];
+    return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, -dz, dr];
+  };
+  const pitch = f.pitch * 1000;
+  const wireVerts: Vec3[] = [];
+  const wireFaces: number[][] = [];
+  const SIDES = 4;
+  const count = Math.ceil(reach / pitch);
+  for (const family of [1, -1] as const)
+    for (let k = -count; k <= count; k++) {
+      const d = k * pitch;
+      const far = Math.sqrt(Math.max(0, reach * reach - d * d));
+      if (far < pitch) continue;
+      const steps = Math.round((2 * far) / (pitch / 2));
+      const points: Vec3[] = [];
+      for (let i = 0; i <= steps; i++) {
+        const t = -far + (2 * far * i) / steps;
+        // The weave's plane, turned 45°: one family of lines each way.
+        const [u, v] = family > 0 ? [t, d] : [d, t];
+        const [x, y] = [(u - v) * Math.SQRT1_2, (u + v) * Math.SQRT1_2];
+        const [s, th] = [Math.hypot(x, y), Math.atan2(y, x)];
+        const [r, z, nr, nz] = onDome(Math.min(s, reach));
+        // Over one wire and under the next.
+        const lift =
+          f.wireRadius *
+          1000 *
+          family *
+          Math.cos((Math.PI * t) / pitch) *
+          (k % 2 ? -1 : 1);
+        const out = r + nr * lift;
+        points.push([out * Math.cos(th), out * Math.sin(th), z + nz * lift]);
+      }
+      const base = wireVerts.length;
+      const ring = f.wireRadius * 1000;
+      points.forEach((p, i) => {
+        const q = points[Math.min(steps, i + 1)] as Vec3;
+        const o = points[Math.max(0, i - 1)] as Vec3;
+        const t: Vec3 = [q[0] - o[0], q[1] - o[1], q[2] - o[2]];
+        const tl = Math.hypot(...t);
+        const n: Vec3 = [p[0], p[1], Math.max(0, p[2] - 250)];
+        const nl = Math.hypot(...n) || 1;
+        const b: Vec3 = [
+          (t[1] * n[2] - t[2] * n[1]) / (tl * nl),
+          (t[2] * n[0] - t[0] * n[2]) / (tl * nl),
+          (t[0] * n[1] - t[1] * n[0]) / (tl * nl),
+        ];
+        for (let j = 0; j < SIDES; j++) {
+          const a = (j * 2 * Math.PI) / SIDES;
+          const [c, e] = [Math.cos(a) * ring, Math.sin(a) * ring];
+          wireVerts.push([
+            mm(p[0] + (n[0] / nl) * c + b[0] * e),
+            mm(p[1] + (n[1] / nl) * c + b[1] * e),
+            mm(p[2] + (n[2] / nl) * c + b[2] * e),
+          ]);
+        }
+      });
+      for (let i = 0; i < steps; i++)
+        for (let j = 0; j < SIDES; j++) {
+          const [a, c] = [
+            base + i * SIDES + j,
+            base + i * SIDES + ((j + 1) % SIDES),
+          ];
+          wireFaces.push([a, c, c + SIDES, a + SIDES]);
+        }
+    }
+  solid(
+    bpy,
+    "UsbMicGrille",
+    wireVerts,
+    wireFaces,
+    finish(bpy, "UsbMicWire", f.wire),
+    { parent: root, smooth: true },
+  );
+
+  // A ridged knob along an axis: `at` is where it leaves the surface, `to` a unit vector outward; ridges to its
+  // `edge`, then a smooth cap.
+  const toAxis = (
+    name: string,
+    place: Vec3,
+    to: Vec3,
+    edge: [number, number],
+    cap: [number, number],
+  ): void => {
+    const [r, h] = edge;
+    const [cr, ch] = cap;
+    const side: Vec3 = Math.abs(to[2]) > 0.9 ? [1, 0, 0] : [to[1], -to[0], 0];
+    const up: Vec3 = [
+      to[1] * side[2] - to[2] * side[1],
+      to[2] * side[0] - to[0] * side[2],
+      to[0] * side[1] - to[1] * side[0],
+    ];
+    const point = (a: number, rr: number, along: number): Vec3 => [
+      place[0] +
+        mm(
+          rr * Math.cos(a) * side[0] + rr * Math.sin(a) * up[0] + along * to[0],
+        ),
+      place[1] +
+        mm(
+          rr * Math.cos(a) * side[1] + rr * Math.sin(a) * up[1] + along * to[1],
+        ),
+      place[2] +
+        mm(
+          rr * Math.cos(a) * side[2] + rr * Math.sin(a) * up[2] + along * to[2],
+        ),
+    ];
+    const TEETH = 44;
+    const ridged = (along: number, depth: number): Vec3[] =>
+      Array.from({ length: TEETH * 2 }, (_, i) =>
+        point((i * Math.PI) / TEETH, i % 2 ? r - depth : r, along),
+      );
+    loft(
+      bpy,
+      `${name}Ridges`,
+      [ridged(0, 0.4), ridged(h - 0.5, 0.4), ridged(h, 1)],
+      knob,
+      { parent: root, smooth: false },
+    );
+    const CAP = 48;
+    const round = (rr: number, along: number): Vec3[] =>
+      Array.from({ length: CAP }, (_, i) =>
+        point((i * 2 * Math.PI) / CAP, rr, along),
+      );
+    loft(
+      bpy,
+      `${name}Cap`,
+      [
+        round(cr, 0),
+        round(cr, h + ch - 0.8),
+        round(cr - 0.3, h + ch - 0.25),
+        round(cr - 0.8, h + ch),
+      ],
+      knob,
+      { parent: root },
+    );
+  };
+
+  // The side knobs that hold the pivot, and a washer under each.
+  for (const side of [-1, 1] as const) {
+    cylinder(bpy, `UsbMicPivot.${side}`, mm(11), mm(1.4), body, {
+      parent: root,
+      at: [side * mm(43.4), 0, mm(163)],
+      rotation: [0, Math.PI / 2, 0],
+      radius: mm(0.5),
+    });
+    toAxis(
+      `UsbMicPivotKnob.${side}`,
+      [side * mm(44), 0, mm(163)],
+      [side, 0, 0],
+      [8.8, 6],
+      [7.4, 1.4],
+    );
+    cylinder(bpy, `UsbMicAxle.${side}`, mm(6), mm(8), body, {
+      parent: root,
+      at: [side * mm(38), 0, mm(163)],
+      rotation: [0, Math.PI / 2, 0],
+    });
+  }
+  // Volume on the front; gain and pattern on the back, low and round.
+  toAxis(
+    "UsbMicVolume",
+    [0, -mm(33.8), mm(160)],
+    [0, -1, 0],
+    [9.2, 6],
+    [7.2, 2],
+  );
+  toAxis(
+    "UsbMicGain",
+    [0, mm(33.8), mm(214)],
+    [0, 1, 0],
+    [10, 3.4],
+    [9.2, 0.6],
+  );
+  toAxis(
+    "UsbMicPattern",
+    [0, mm(33.8), mm(186)],
+    [0, 1, 0],
+    [10, 3.4],
+    [9.2, 0.6],
+  );
+
+  // A pointer on each of the three: a thin light line from the rim to the centre of the cap, at 12 o'clock.
+  const line = finish(bpy, "UsbMicPointer", {
+    color: "#c8c8c8",
+    roughness: 0.6,
+  });
+  for (const [name, y, z, length, sign] of [
+    ["Volume", -mm(41.85), mm(160), mm(4), -1],
+    ["Gain", mm(37.85), mm(214), mm(5), 1],
+    ["Pattern", mm(37.85), mm(186), mm(5), 1],
+  ] as const)
+    box(bpy, `UsbMic${name}Pointer`, [mm(0.7), mm(0.2), length], line, {
+      parent: root,
+      at: [0, y, z + mm(sign < 0 ? 4.4 : 5.6)],
+    });
+
+  // The mute button: a raised ring, its light in the middle.
+  cylinder(bpy, "UsbMicMuteRing", mm(5.2), mm(1.4), knob, {
+    parent: root,
+    at: [0, -mm(34), mm(186.5)],
+    rotation: [Math.PI / 2, 0, 0],
+    radius: mm(0.5),
+  });
+  cylinder(
+    bpy,
+    "UsbMicMuteLight",
+    mm(1.5),
+    mm(0.4),
+    finish(bpy, "UsbMicLight", f.led),
+    {
+      parent: root,
+      at: [0, -mm(34.8), mm(186.5)],
+      rotation: [Math.PI / 2, 0, 0],
+    },
+  );
+
+  // The oval badge on the front, its name left out: a raised rim wrapped round the body.
+  const oval = (t: number, grow: number, lift: number): Vec3 => {
+    const a = ((11.6 + grow) * Math.cos(t)) / 34;
+    return [
+      mm((34 + lift) * Math.sin(a)),
+      -mm((34 + lift) * Math.cos(a)),
+      mm(207.6 + (7 + grow) * Math.sin(t)),
+    ];
+  };
+  const OVAL = 64;
+  const ringAt = (grow: number, lift: number): Vec3[] =>
+    Array.from({ length: OVAL }, (_, i) =>
+      oval((i * 2 * Math.PI) / OVAL, grow, lift),
+    );
+  const badge: Vec3[] = [
+    ...ringAt(0, -0.2),
+    ...ringAt(0, 0.7),
+    ...ringAt(-1, 0.8),
+    ...ringAt(-1.6, 0.25),
+  ];
+  const badgeFaces: number[][] = [];
+  for (let j = 0; j < 3; j++)
+    for (let i = 0; i < OVAL; i++) {
+      const [a, b] = [j * OVAL + i, j * OVAL + ((i + 1) % OVAL)];
+      badgeFaces.push([a, b, b + OVAL, a + OVAL]);
+    }
+  solid(
+    bpy,
+    "UsbMicBadge",
+    badge,
+    badgeFaces,
+    finish(bpy, "UsbMicCollar", f.collar),
+    {
+      parent: root,
+      smooth: true,
+    },
+  );
+
+  // The cable.
+  if (f.cable.length > 1) {
+    const path = smoothed(f.cable as number[][], 6) as Vec3[];
+    const SECTION = 10;
+    const rings = path.map((p, i) => {
+      const q = path[Math.min(path.length - 1, i + 1)] as Vec3;
+      const o = path[Math.max(0, i - 1)] as Vec3;
+      const t: Vec3 = [q[0] - o[0], q[1] - o[1], q[2] - o[2]];
+      const tl = Math.hypot(...t);
+      const aside: Vec3 =
+        Math.abs(t[2]) > tl * 0.9
+          ? [1, 0, 0]
+          : [-t[1] / Math.hypot(t[0], t[1]), t[0] / Math.hypot(t[0], t[1]), 0];
+      const over: Vec3 = [
+        (t[1] * aside[2] - t[2] * aside[1]) / tl,
+        (t[2] * aside[0] - t[0] * aside[2]) / tl,
+        (t[0] * aside[1] - t[1] * aside[0]) / tl,
+      ];
+      return Array.from({ length: SECTION }, (_, j): Vec3 => {
+        const a = (j * 2 * Math.PI) / SECTION;
+        const [c, s] = [mm(2) * Math.cos(a), mm(2) * Math.sin(a)];
+        return [
+          p[0] + aside[0] * c + over[0] * s,
+          p[1] + aside[1] * c + over[1] * s,
+          p[2] + aside[2] * c + over[2] * s,
+        ];
+      });
+    });
+    loft(bpy, "UsbMicCable", rings, knob, { parent: root });
+  }
   return root;
 }

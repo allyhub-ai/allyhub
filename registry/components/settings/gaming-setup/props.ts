@@ -1,218 +1,107 @@
-// The gaming setup's props, placed in a 3.6 × 2.9 m room painted dark. Blender's axes (Z up): a world
-// point (x, y, z) is (x, -z, y) here. The person sits at the origin facing the desk at +y; the desk's
-// wall is at y = 1.15 (the desk stands 5 cm off it, so the strip on its back edge washes the wall), the
-// wall behind them at -1.8.
+// The gaming setup's props, placed in a 3.6 × 2.82 m room with a pale wall. Blender's axes (Z up): a world
+// point (x, y, z) is (x, -z, y) here. The person sits at the origin facing the desk at +y; the desk's wall is
+// at y = 1.02 (the desk's back edge 2 cm off it), the wall behind them at -1.8.
 //
-// Laid out as popular gaming-setup demo videos show it:
-// - the work zone: a black 1.6 × 0.8 m desk against the wall, its front edge 0.3 m from the person; a
-//   27-inch monitor low behind a dark mechanical keyboard on a large black mat, a laptop to the right, a
-//   PC tower with a glass side and lit fans on the desk's back left corner, its glass towards the monitor;
-//   an RGB LED strip along the desk's back edge washing the wall, and two floating shelves on the wall,
-//   one each side of the monitor, with an LED strip under each and collectibles on them;
-// - behind the person (the room version only): a wood slat panel, the chair on a dark rug.
-// The keyboard and the monitor stand where the home desk has them (the keyboard's centre at x -0.05,
-// y 0.61; the monitor's foot 0.2 m behind it), so the demo cameras are the same.
-// `look` is "day", "overcast", "evening" or "night": the strips' and fans' colours and how bright they glow.
+// Laid out as desk demos in a coloured room show it (archetype D of docs/design/desk-settings.md):
+// - a black 1.4 × 0.7 m desk, its front edge 0.3 m from the person, a black mat with a lit edge on it;
+// - a 27-inch gaming monitor centred, a mechanical keyboard centred under it, a mouse to its right;
+// - at the left, a USB microphone on its own stand;
+// - behind the monitor, hidden by it, two light bars turned to the wall: what colours the room.
+// `look` is "day", "overcast", "evening" or "night": each has its own pair of colours.
 import {
   defineModel,
   type Bpy,
   type ModelObject,
   type Vec3,
 } from "@allyhub-next/model";
+import { usbMic, USB_MIC_PRESETS } from "../../kit/audio.ts";
 import { chair } from "../../kit/chair.ts";
 import { desk, DESK_DEFAULTS } from "../../kit/desk.ts";
-import { deskMat, figurine, mouse, mug } from "../../kit/desk-items.ts";
+import { lightBar, mouse } from "../../kit/desk-items.ts";
 import { keyboard } from "../../kit/keyboard.ts";
-import { LAPTOP_PRESETS, laptop } from "../../kit/laptop.ts";
-import { monitor } from "../../kit/monitor.ts";
+import { MONITOR_PRESETS, monitor } from "../../kit/monitor.ts";
 import {
-  box,
-  cylinder,
   deg,
   finish,
   group,
   mm,
+  slab,
+  solid,
   type Finish,
 } from "../../kit/parts.ts";
-import { floatingShelf, rug, slatPanel } from "../../kit/wall.ts";
+import { rug } from "../../kit/wall.ts";
 
 export const TOP = 0.74;
-export const DESK_WALL = 1.15;
+export const DESK_WALL = 1.02;
 export const BACK_WALL = -1.8;
-/** The desk's centre: a 1.6 × 0.8 m top against the wall, its front edge 0.3 m from the person. */
-export const DESK_Y = 0.7;
-/** The keyboard's centre: as on the home desk, 0.31 m in from the desk's front edge. */
-const KEYS_Y = 0.61;
-/** The shelves on the desk's wall, one each side of the monitor: their x, width, depth and the height of their tops. */
-export const WALL_SHELVES = {
-  x: [-0.58, 0.58],
-  width: 0.5,
-  depth: 0.18,
-  top: 1.45,
-};
-/** The PC tower on the desk's back left corner (NZXT H5 Flow: 227 × 446 × 464 mm). */
-export const TOWER = { x: -0.66, y: 0.85, size: [0.227, 0.446, 0.464] as Vec3 };
+/** The desk's centre: a 1.4 × 0.7 m top against the wall, its front edge 0.3 m from the person. */
+export const DESK_Y = 0.65;
+/** The keyboard's centre, 0.25 m in from the desk's front edge. */
+const KEYS_Y = 0.55;
+/** The monitor's foot, centred behind the keyboard. */
+const MONITOR_Y = 0.78;
+/** The mat's centre. */
+const MAT_Y = 0.5;
+/**
+ * The light bars, each in its monitor mount on the panel's back (Philips Hue Play's own bracket): their x, y and
+ * height over the desk, and how far each turns outward (degrees), so each colours its own side of the wall.
+ */
+export const BARS = { x: 0.2, y: 0.88, z: 0.16, turn: 28 };
+/** A bar's diffuser (Philips Hue Play, 254 × 44 mm with its ends): its size and the height of its centre over the desk. */
+export const BAR_GLOW = { size: [0.036, 0.244], height: 0.127 };
 
 /**
- * Each look's LED colours (sRGB) and glows (nits): off-white and low by day, coloured and bright at night; `keys`, the
- * keyboard's RGB backlight (nits), brighter as the room darkens.
+ * Each look's two colours (sRGB), left and right, and how bright the keyboard's backlight and the mat's edge
+ * glow (nits). By day the room shows and the colours are cool; by night they are all there is.
  */
 export const LEDS = {
-  day: {
-    desk: "#8a7dff",
-    shelf: "#8a7dff",
-    fans: "#a9c8ff",
-    glow: 120,
-    keys: 60,
-  },
-  overcast: {
-    desk: "#8a7dff",
-    shelf: "#8a7dff",
-    fans: "#a9c8ff",
-    glow: 160,
-    keys: 70,
-  },
-  evening: {
-    desk: "#7b4dff",
-    shelf: "#ff4fd8",
-    fans: "#7b4dff",
-    glow: 1400,
-    keys: 100,
-  },
-  night: {
-    desk: "#ff2d95",
-    shelf: "#2de2ff",
-    fans: "#ff2d95",
-    glow: 4000,
-    keys: 120,
-  },
+  day: { left: "#27d6e8", right: "#3f7dff", keys: 30, mat: 22 },
+  overcast: { left: "#3f7dff", right: "#e24bd0", keys: 30, mat: 22 },
+  evening: { left: "#ff3fa4", right: "#2f8bff", keys: 30, mat: 22 },
+  night: { left: "#7a35ff", right: "#ff8a2b", keys: 30, mat: 22 },
 } as const;
-/** The keyboard's RGB wave, left to right. */
-const KEY_RGB = [
-  "#ff2a55",
-  "#ff8a00",
-  "#ffe600",
-  "#2bff6a",
-  "#00c8ff",
-  "#7a3cff",
-];
 export type GamingLook = keyof typeof LEDS;
 
-const BLACK_TOP: Finish = { color: "#141416", roughness: 0.55 };
-const DARK: Finish = { color: "#1b1c1f", roughness: 0.45 };
+const BLACK_TOP: Finish = { color: "#242428", roughness: 0.5 };
 
 export default defineModel((bpy, params) => {
   const look = String(params["look"]);
-  const led = look in LEDS ? LEDS[look as GamingLook] : LEDS.day;
+  const led = look in LEDS ? LEDS[look as GamingLook] : LEDS.night;
   // The demo version is the desk and its wall alone: what a camera close to the screen sees.
   const demo = params["version"] === "demo";
   const top = TOP;
 
   desk(bpy, [0, DESK_Y, 0], {
-    top: [1.6, 0.8, DESK_DEFAULTS.top[2]],
+    top: [1.4, 0.7, DESK_DEFAULTS.top[2]],
     surface: BLACK_TOP,
     frame: { color: "#0f0f10", roughness: 0.5, metallic: 0.3 },
+    handset: false,
   });
-  deskMat(bpy, [-0.07, KEYS_Y + 0.01, top], {
-    size: [mm(800), mm(380), mm(4)],
-    surface: { color: "#0f1012", roughness: 0.95 },
-  });
-  // The monitor close behind the keyboard and low, as popular demos set it: large over the keys.
-  monitor(bpy, [0, KEYS_Y + 0.2, top], {
-    raise: 0,
-    tilt: 3,
-    shell: { color: "#202124", roughness: 0.5 },
-    stand: { color: "#2a2b2e", roughness: 0.4, metallic: 0.6 },
-  });
-  keyboard(bpy, [-0.05, KEYS_Y, top + mm(4)], {
+  litMat(bpy, [0, MAT_Y, top], led.left, led.right, led.mat);
+  monitor(bpy, [0, MONITOR_Y, top], MONITOR_PRESETS.gaming27);
+  // Keychron K8 Pro: black case, lilac caps as the reference's board, its backlight the look's two colours.
+  keyboard(bpy, [0, KEYS_Y, top + mm(4)], {
     case: { color: "#141518", roughness: 0.45, metallic: 0.5 },
-    keys: { color: "#222428", roughness: 0.55 },
-    accent: { color: "#e2364f", roughness: 0.55 },
+    keys: { color: "#5a5478", roughness: 0.5 },
+    accent: { color: "#8d7fd0", roughness: 0.5 },
     legends: "light",
-    backlight: { color: KEY_RGB, strength: led.keys },
+    backlight: { color: [led.left, led.right], strength: led.keys },
   });
-  mouse(bpy, [0.24, KEYS_Y, top + mm(4)], {
-    shell: { color: "#18191b", roughness: 0.5 },
-  });
-  const lap = laptop(bpy, [0.525, DESK_Y - 0.04, top], LAPTOP_PRESETS.gaming);
-  lap.rotation_euler = [0, 0, deg(-9)];
-  mug(bpy, look === "night" ? [0.72, 0.44, top] : [-0.6, DESK_Y - 0.24, top], {
-    glaze: { color: "#26272b", roughness: 0.3 },
-  });
-  pcTower(bpy, [TOWER.x, TOWER.y, top], led.fans, led.glow);
+  mouse(bpy, [0.3, KEYS_Y, top + mm(4)], { kind: "gaming" });
+  deskMic(bpy, [-0.4, 0.74, top]);
 
-  // The RGB strip under the desk's back edge, facing the wall: what washes it.
-  box(
-    bpy,
-    "DeskStripLed",
-    [1.5, mm(2), mm(10)],
-    finish(bpy, "LedStrip", {
-      color: "#ffffff",
-      roughness: 0.4,
-      emission: { color: led.desk, strength: led.glow },
-    }),
-    { at: [0, DESK_Y + 0.4 - mm(4), top - DESK_DEFAULTS.top[2] - mm(6)] },
-  );
-
-  // The shelves each side of the monitor, an LED strip under each one's front edge.
-  WALL_SHELVES.x.forEach((x, i) => {
-    floatingShelf(bpy, [x, DESK_WALL, WALL_SHELVES.top - mm(30)], {
-      size: [WALL_SHELVES.width, WALL_SHELVES.depth, mm(30)],
-      surface: DARK,
+  // The light that colours the wall comes from the scenery's panes; the diffusers, hidden behind the monitor,
+  // glow only enough to read as on from a side.
+  for (const side of [-1, 1] as const)
+    lightBar(bpy, [side * BARS.x, BARS.y, top + BARS.z], {
+      color: side < 0 ? led.left : led.right,
+      glow: 1,
+      rotation: [0, 0, deg(-side * BARS.turn)],
     });
-    box(
-      bpy,
-      `ShelfStripLed${String(i + 1)}`,
-      [WALL_SHELVES.width - 0.04, mm(10), mm(2)],
-      finish(bpy, "LedStripShelf", {
-        color: "#ffffff",
-        roughness: 0.4,
-        emission: { color: led.shelf, strength: led.glow },
-      }),
-      {
-        at: [
-          x,
-          DESK_WALL - WALL_SHELVES.depth + mm(20),
-          WALL_SHELVES.top - mm(31),
-        ],
-      },
-    );
-  });
-  const onShelf = (i: number, dx: number): Vec3 => [
-    (WALL_SHELVES.x[i] ?? 0) + dx,
-    DESK_WALL - WALL_SHELVES.depth / 2,
-    WALL_SHELVES.top,
-  ];
-  figurine(
-    bpy,
-    onShelf(0, -0.12),
-    { height: 0.14, body: "#e2364f", head: "#f2ece4", turn: 10 },
-    undefined,
-    "ShelfFigure1",
-  );
-  figurine(
-    bpy,
-    onShelf(0, 0.06),
-    { height: 0.11, body: "#2de2ff", head: "#1c1c1e", turn: -15 },
-    undefined,
-    "ShelfFigure2",
-  );
-  figurine(
-    bpy,
-    onShelf(1, 0.14),
-    { height: 0.13, body: "#7b4dff", head: "#f2ece4", turn: -20 },
-    undefined,
-    "ShelfFigure3",
-  );
 
   if (demo) return;
 
-  // Behind the person: a wood slat panel on the wall, the chair on a dark rug.
-  const panel = slatPanel(bpy, [0.75, BACK_WALL, 0], {
-    size: [1.2, 2.4],
-    wood: { color: "#5a4433", roughness: 0.6 },
-  });
-  panel.rotation_euler = [0, 0, Math.PI];
+  // The room version: the chair on a dark rug.
   const seat = chair(bpy, [0, -0.07, mm(8)], {
     mesh: { color: "#1a1a1c", roughness: 0.9 },
   });
@@ -224,134 +113,98 @@ export default defineModel((bpy, params) => {
 });
 
 /**
- * A mid-tower PC case standing on its foot (NZXT H5 Flow: 227 × 446 × 464 mm), its front towards -y and its
- * tempered glass side towards +x, three lit fans seen through the glass: `color` and `glow` (nits) light them.
+ * A lit desk mat (SteelSeries QcK Prism Cloth XL: 900 × 300 × 4 mm, two lighting zones): black cloth, a band of
+ * light round its edge, one colour on each half. `glow` is in nits.
  */
-export function pcTower(
+function litMat(
   bpy: Bpy,
   at: Vec3,
-  color: string,
+  left: string,
+  right: string,
   glow: number,
 ): ModelObject {
-  const [w, d, h] = TOWER.size;
-  const root = group(bpy, "PcTower", at);
-  const steel = finish(bpy, "PcTowerSteel", {
-    color: "#121214",
-    roughness: 0.5,
-    metallic: 0.6,
-  });
-  // The case: steel with its glass side open, so what is inside shows.
-  box(bpy, "PcTowerSide", [mm(4), d, h - mm(20)], steel, {
-    parent: root,
-    at: [-w / 2 + mm(2), 0, mm(20) + (h - mm(20)) / 2],
-    radius: mm(2),
-  });
-  for (const [name, z] of [
-    ["PcTowerTop", h - mm(6)],
-    ["PcTowerBottom", mm(26)],
-  ] as const)
-    box(bpy, name, [w, d, mm(12)], steel, {
-      parent: root,
-      at: [0, 0, z],
-      radius: mm(3),
-      segments: 2,
+  const root = group(bpy, "LitMat", at);
+  const [w, d, h] = [mm(900), mm(300), mm(4)];
+  const band = mm(2);
+  const corner = mm(19);
+  // A zone: the band along the mat's edge from the middle of its front round to the middle of its back, on the
+  // side `sign`, wound counter-clockwise from above. It is only the band: nothing of it lies under the cloth.
+  const zone = (name: string, color: string, sign: 1 | -1): void => {
+    const rim = (inset: number): [number, number][] => {
+      const [x, y, r] = [w / 2 - inset, d / 2 - inset, corner - inset];
+      const arc = (cx: number, cy: number, from: number): [number, number][] =>
+        Array.from({ length: 11 }, (_, i) => {
+          const a = from + (i / 10) * (Math.PI / 2);
+          return [cx + r * Math.cos(a), cy + r * Math.sin(a)];
+        });
+      const half: [number, number][] = [
+        [0, -y],
+        ...arc(x - r, -y + r, -Math.PI / 2),
+        ...arc(x - r, y - r, 0),
+        [0, y],
+      ];
+      return sign > 0
+        ? half
+        : half.map(([px, py]): [number, number] => [-px, py]).reverse();
+    };
+    const [outer, inner] = [rim(0), rim(band)];
+    const top = h - mm(0.5);
+    const vertices: Vec3[] = [];
+    const faces: number[][] = [];
+    outer.forEach(([ox, oy], i) => {
+      const [ix, iy] = inner[i] ?? [ox, oy];
+      vertices.push([ox, oy, 0], [ox, oy, top], [ix, iy, top], [ix, iy, 0]);
+      if (i < outer.length - 1) {
+        const [a, b] = [i * 4, (i + 1) * 4];
+        faces.push(
+          [a, b, b + 1, a + 1],
+          [a + 1, b + 1, b + 2, a + 2],
+          [a + 2, b + 2, b + 3, a + 3],
+        );
+      }
     });
-  box(bpy, "PcTowerFront", [w, mm(18), h - mm(20)], steel, {
-    parent: root,
-    at: [0, -d / 2 + mm(9), mm(20) + (h - mm(20)) / 2],
-    radius: mm(4),
-    segments: 2,
-  });
-  box(bpy, "PcTowerBack", [w, mm(6), h - mm(20)], steel, {
-    parent: root,
-    at: [0, d / 2 - mm(3), mm(20) + (h - mm(20)) / 2],
-  });
-  // Feet.
-  for (const [sx, sy] of [
-    [-1, -1],
-    [1, -1],
-    [-1, 1],
-    [1, 1],
-  ] as const)
-    box(
+    solid(
       bpy,
-      `PcTowerFoot.${sx > 0 ? "R" : "L"}${sy > 0 ? "B" : "F"}`,
-      [mm(30), mm(60), mm(20)],
-      steel,
-      {
-        parent: root,
-        at: [sx * (w / 2 - mm(25)), sy * (d / 2 - mm(50)), mm(10)],
-      },
+      name,
+      vertices,
+      faces,
+      finish(bpy, name, {
+        color: "#0b0b0c",
+        roughness: 0.5,
+        emission: { color, strength: glow },
+      }),
+      { parent: root },
     );
-  // Inside: the motherboard against the far side, a graphics card across it, a cooler.
-  const board = finish(bpy, "PcTowerBoard", {
-    color: "#1e2024",
-    roughness: 0.6,
-  });
-  box(bpy, "PcTowerBoard", [mm(3), mm(244), mm(305)], board, {
-    parent: root,
-    at: [-w / 2 + mm(30), mm(40), h - mm(40) - mm(152)],
-  });
-  box(
+  };
+  zone("LitMatRight", right, 1);
+  zone("LitMatLeft", left, -1);
+  slab(
     bpy,
-    "PcTowerGpu",
-    [mm(130), mm(300), mm(55)],
-    finish(bpy, "PcTowerGpu", {
-      color: "#2b2d31",
-      roughness: 0.4,
-      metallic: 0.5,
-    }),
-    {
-      parent: root,
-      at: [-w / 2 + mm(100), 0, mm(200)],
-      radius: mm(4),
-    },
+    "LitMatCloth",
+    [w - 2 * band, d - 2 * band, h],
+    corner - band,
+    finish(bpy, "DeskMat", { color: "#1d1e23", roughness: 0.95 }),
+    { parent: root, edge: mm(1), uv: true },
   );
-  cylinder(
-    bpy,
-    "PcTowerCooler",
-    mm(36),
-    mm(80),
-    finish(bpy, "PcTowerCooler", {
-      color: "#3a3c40",
-      roughness: 0.35,
-      metallic: 0.8,
-    }),
-    {
-      parent: root,
-      at: [-w / 2 + mm(72), mm(60), h - mm(130)],
-      rotation: [0, Math.PI / 2, 0],
-    },
-  );
-  // The glass side is left open (a pane would hide what is inside): only its black frame, round the opening.
-  const rim = finish(bpy, "PcTowerRim", { color: "#0b0c0e", roughness: 0.3 });
-  for (const [name, size, z] of [
-    ["PcTowerRimTop", [mm(4), d, mm(14)], h - mm(19)],
-    ["PcTowerRimBottom", [mm(4), d, mm(14)], mm(39)],
-  ] as const)
-    box(bpy, name, [...size], rim, { parent: root, at: [w / 2 - mm(2), 0, z] });
-  // Three 120 mm fans behind the front panel, their rings lit, seen edge on through the open side; and an
-  // LED strip along the opening's top and bottom.
-  const fans = group(bpy, "PcTowerFans", [0, 0, 0], root);
-  const lit = finish(bpy, "PcTowerFanGlow", {
-    color: "#ffffff",
-    roughness: 0.4,
-    ...(glow > 0 ? { emission: { color, strength: glow } } : {}),
-  });
-  for (let i = 0; i < 3; i++)
-    cylinder(bpy, `PcTowerFan${String(i + 1)}`, mm(58), mm(25), lit, {
-      parent: fans,
-      at: [0, -d / 2 + mm(30), mm(80) + i * mm(130)],
-      rotation: [Math.PI / 2, 0, 0],
-      segments: 32,
-    });
-  box(bpy, "PcTowerStrip", [mm(3), d - mm(60), mm(8)], lit, {
-    parent: fans,
-    at: [w / 2 - mm(8), mm(4), h - mm(30)],
-  });
-  box(bpy, "PcTowerStripLow", [mm(3), d - mm(60), mm(8)], lit, {
-    parent: fans,
-    at: [w / 2 - mm(8), mm(4), mm(40)],
-  });
   return root;
+}
+
+const MIC_LOOK = USB_MIC_PRESETS.silver;
+const MIC_CABLE: Vec3[] = [
+  [-0.02, 0, 0.112],
+  [-0.02, 0, 0.095],
+  [-0.012, 0.008, 0.07],
+  [-0.006, 0.04, 0.045],
+  [0.005, 0.085, 0.024],
+  [0.03, 0.13, 0.003],
+  [0.09, 0.19, 0.002],
+  [0.2, 0.2, 0.002],
+  [0.42, 0.14, 0.002],
+];
+
+/** The USB microphone (a Blue Yeti) turned in towards the person, its cable through its stand and away behind the monitor. */
+function deskMic(bpy: Bpy, at: Vec3): ModelObject {
+  const mic = usbMic(bpy, at, { cable: MIC_CABLE, ...MIC_LOOK });
+  mic.rotation_euler = [0, 0, deg(14)];
+  return mic;
 }
