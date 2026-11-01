@@ -1,0 +1,3 @@
+display_name: "Presentazioni"
+short_description: "Una presentazione curata, nel tuo brand"
+default_prompt: "Usa la skill brand-decks: crea una presentazione su [l’argomento] per [chi], perché [cosa devono fare]."

@@ -4,21 +4,19 @@ AllyHub lets your AI agent research your market and make videos, decks, docs and
 
 This repository holds:
 
-- **The plugin** (`plugins/allyhub/`) for Claude Code, ChatGPT and Codex, with its marketplaces (`.claude-plugin/`, `.agents/plugins/`).
-- **Skills** (`skills/<name>/`): how to make one kind of work, added to a project.
+- **Skills** (`skills/<name>/`): `allyhub` is AllyHub itself, for your agent; the others each say how to make one kind of work, added to a project.
 - **The registry** (`registry/<name>/`): components, templates, sceneries and models a project adds with `npx allyhub add <type>/<name>`.
 - **Issues**: report a bug or ask for a feature here.
 
 ## Install
 
-In Claude Code:
+Have your agent run this, or run it in a terminal. It works for Claude Code, Codex and the other agents the [skills CLI](https://github.com/vercel-labs/skills) knows:
 
 ```
-/plugin marketplace add allyhub-ai/allyhub
-/plugin install allyhub@allyhub
+npx skills add allyhub-ai/allyhub --skill allyhub -g -y
 ```
 
-In Codex: `codex plugin marketplace add allyhub-ai/allyhub`, then install AllyHub from the plugin list.
+AllyHub itself comes the first time your agent uses it (Node.js 22.19 or newer). `npx skills update -g` brings the skill up to date.
 
 ## Contributing
 
@@ -26,4 +24,4 @@ We do not take pull requests yet. Issues are welcome.
 
 ## Licence
 
-The plugin, the skills and the registry's code items are MIT (`LICENSE`); each asset item in the registry carries its own licence. AllyHub's CLI, SDK and Studio are not in this repository and are licensed separately.
+The skills and the registry's code items are MIT (`LICENSE`); each asset item in the registry carries its own licence. AllyHub's CLI, SDK and Studio are not in this repository and are licensed separately.

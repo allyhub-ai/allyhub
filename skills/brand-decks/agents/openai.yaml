@@ -1,0 +1,4 @@
+interface:
+  display_name: Decks
+  short_description: A deck that looks designed, in your brand
+  default_prompt: "Use the brand-decks skill: make a deck about [what it’s about] for [who it’s for], so they [what they should do]."

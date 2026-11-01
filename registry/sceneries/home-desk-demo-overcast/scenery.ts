@@ -2,4 +2,4 @@
 import { defineScenery } from "@allyhub-next/scenery-host/layer";
 import { homeDesk } from "../../components/settings/home-desk/scenery.ts";
 
-export default defineScenery(homeDesk("overcast", "demo"));
+export default defineScenery(homeDesk("overcast", "demo", "release"));

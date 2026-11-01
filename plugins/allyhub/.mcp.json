@@ -1,8 +1,0 @@
-{
-  "mcpServers": {
-    "allyhub": {
-      "command": "npx",
-      "args": ["-y", "allyhub", "mcp"]
-    }
-  }
-}

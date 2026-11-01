@@ -2,4 +2,4 @@
 import { defineScenery } from "@allyhub-next/scenery-host/layer";
 import { bedroomDesk } from "../../components/settings/bedroom-desk/scenery.ts";
 
-export default defineScenery(bedroomDesk("overcast", "demo", "preview"));
+export default defineScenery(bedroomDesk("overcast", "demo", "release"));
