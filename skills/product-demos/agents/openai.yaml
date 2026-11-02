@@ -1,4 +1,0 @@
-interface:
-  display_name: Product demos
-  short_description: Your product, shown by using it
-  default_prompt: "Use the product-demos skill: make a demo of [feature, your product’s URL]."

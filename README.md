@@ -8,16 +8,15 @@ Agent write the code; the person never has to. They ask for the work in their ow
 
 This repository holds:
 
-- **Skills** (`skills/<name>/`): `allyhub` is AllyHub itself, for your agent; the others each say how to make one kind of work, added to a project.
-- **The registry** (`registry/`): components, templates, sceneries and models a project adds with `npx allyhub add <type>/<name>`.
+- **The `allyhub` skill** (`skills/allyhub/`): AllyHub itself, for your agent.
 - **Issues**: report a bug or ask for a feature here.
 
 ## Install
 
-Have your agent run these two commands exactly, not its own skill installer, or run them in a terminal. They need Node.js 22.19 or newer, and work for Claude Code, Codex and the other agents the [skills CLI](https://github.com/vercel-labs/skills) knows.
+Have your agent run these two commands exactly, not its own skill installer, or run them in a terminal. They need Node.js 22.19 or newer. `-a` names the agents to install for: any the [skills CLI](https://github.com/vercel-labs/skills) knows.
 
 ```bash
-npx skills add allyhub-ai/allyhub --skill allyhub -g -y
+npx skills add allyhub-ai/allyhub --skill allyhub -g -y -a claude-code codex
 ```
 
 ```bash
@@ -46,4 +45,4 @@ We do not take pull requests yet. Issues are welcome.
 
 ## Licence
 
-The skills and the registry's code items are MIT (`LICENSE`); each asset item in the registry carries its own licence. AllyHub's CLI, SDK and Studio are not in this repository and are licensed separately.
+The skill is MIT (`LICENSE`), as are the work skills and code items a project adds with `npx allyhub add <type>/<name>`; each asset item carries its own licence. AllyHub's CLI, SDK and Studio are not in this repository and are licensed separately.

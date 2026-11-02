@@ -10,7 +10,7 @@ A video is a folder with a `video.ts` (or `.tsx`), rendered to MP4. A **part** i
 | Cut recorded footage           | `allyhub help footage`    | `footage.md`, `speech.md`                                      |
 | Study reference videos         | `allyhub help references` |                                                                |
 
-Those help pages print where the SDK's docs are. Read the ones the video needs before writing it.
+Those help pages print where the SDK's docs are. Read the ones the video needs before writing it. `layers.md` holds `custom()` and `defineComponent()`, the layer's `ctx`, the DOM, animation, text, path and noise helpers, and a person's input: `pointer`, `tap`, `drag`, scrolling and typing, which move a cursor, a finger or anything held the way a hand does.
 
 ## Ready-made
 

@@ -1,3 +1,0 @@
-display_name: "Demo di prodotto"
-short_description: "Il tuo prodotto, mostrato mentre lo si usa"
-default_prompt: "Usa la skill product-demos: Crea una demo di [la funzione, l'URL del tuo prodotto]."
