@@ -3,7 +3,7 @@ name: allyhub
 description: "Know a market and show a product, at scale, with AllyHub: research with real data from social media, ad libraries, e-commerce, app stores and search, then make videos (product demos, explainers, launch shorts, UGC shorts, ads, talking heads), decks and carousels, docs, sheets, 3D scenes and websites (landing pages, documentation sites, blogs, pages made for SEO, AEO and GEO) as code in a project folder, checked, previewed and rendered on this computer. Use when the user mentions AllyHub or its preview, or wants a video, a demo, an explainer, a UGC short, a deck, slides, a carousel, a doc, a sheet, a website, a landing page, a documentation site, a blog or pages that rank in search and AI answers, or research such as finding users, competitors, ads, posts or keywords."
 license: MIT
 metadata:
-  version: "19"
+  version: "21"
 ---
 
 # AllyHub

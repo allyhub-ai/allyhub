@@ -13,10 +13,10 @@ This repository holds:
 
 ## Install
 
-Have your agent run these two commands exactly, not its own skill installer, or run them in a terminal. They need Node.js 22.19 or newer, and work for Claude Code, Codex and the other agents the [skills CLI](https://github.com/vercel-labs/skills) knows.
+Have your agent run these two commands exactly, not its own skill installer, or run them in a terminal. They need Node.js 22.19 or newer. `-a` names the agents to install for: any the [skills CLI](https://github.com/vercel-labs/skills) knows.
 
 ```bash
-npx skills add allyhub-ai/allyhub --skill allyhub -g -y
+npx skills add allyhub-ai/allyhub --skill allyhub -g -y -a claude-code codex
 ```
 
 ```bash
