@@ -1,3 +1,0 @@
-display_name: "프레젠테이션"
-short_description: "브랜드에 맞게 디자인된 프레젠테이션"
-default_prompt: "brand-decks 스킬을 사용해 [대상]을 위한 [주제] 프레젠테이션을 만들어 [원하는 행동]을 하도록 해 주세요."

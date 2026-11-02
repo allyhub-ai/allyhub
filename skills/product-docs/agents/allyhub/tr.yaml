@@ -1,3 +1,0 @@
-display_name: "Ürün dokümanı"
-short_description: "Bir özelliğin dokümanı, açıklamalı ekranlarla"
-default_prompt: "product-docs becerisini kullan: [özellik ve bağlantısı] dokümanını yaz."

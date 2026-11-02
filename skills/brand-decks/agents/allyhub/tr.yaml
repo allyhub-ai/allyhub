@@ -1,3 +1,0 @@
-display_name: "Sunumlar"
-short_description: "Markanıza özel tasarlanmış bir sunum"
-default_prompt: "brand-decks becerisini kullan: [kimler] için [konu] hakkında, [ne yapmalarını istediğin] için bir sunum hazırla."
