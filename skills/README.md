@@ -2,7 +2,7 @@
 
 Each folder here is an [Agent Skill](https://agentskills.io/specification): a `SKILL.md` with its front matter, and the files it reads. They are published from the public repository, `allyhub-ai/allyhub` ([distribution.md](../../docs/distribution.md)).
 
-- `allyhub` is AllyHub itself, kept short and general: what AllyHub is good at, that `allyhub help` is the reference for the commands and the SDK's docs, and that `allyhub skills` lists the work skills (`allyhub skills show <name>` prints one, `allyhub add skill/<name>` adds it), never naming them one by one. It is the one skill installed for every folder (`npx skills add allyhub-ai/allyhub --skill allyhub -g -y`, or AllyHub Studio), and its description covers every kind of work, so an agent reads it whatever is asked.
+- `allyhub` is AllyHub itself: its `SKILL.md` says what AllyHub does and links a file in `references/` for each kind of work, read on demand. A rule with no moment to open a file stays in `SKILL.md`. It says that `allyhub help` is the reference for the commands and the SDK's docs, and that `allyhub skills` lists the work skills (`allyhub skills show <name>` prints one, `allyhub add skill/<name>` adds it), never naming them one by one. It is the one skill installed for every folder (`npx skills add allyhub-ai/allyhub --skill allyhub -g -y`, or AllyHub Studio), and its description covers every kind of work, so an agent reads it whatever is asked.
 - The others are **work skills**: each says how to make one kind of work in an AllyHub project (a demo film, a UGC short, the docs of a feature). A work skill is the project's: it is installed into the project as the skills CLI installs one with project scope, in `.agents/skills/<name>` with a link in `.claude/skills/<name>` (from AllyHub's registry, or Studio's gallery), never for every folder. The agent loads it the standard way; nothing of it is copied anywhere else in the project.
 
 Adding a work skill is adding a folder. Nothing in Studio or the CLI changes. One is added only once it has been tried end to end with real agents on a real product.
@@ -22,7 +22,7 @@ Adding a work skill is adding a folder. Nothing in Studio or the CLI changes. On
     allyhub/<locale>.yaml the card's words in another language
 ```
 
-Nothing else may be at its top level. `node scripts/registry-build.mjs` builds every skill here into an item of the registry, with its card.
+Nothing else may be at its top level. `node scripts/registry-publish.mjs` builds every skill here into an item of the registry, with its card.
 
 ## SKILL.md
 
