@@ -18,6 +18,10 @@ Those help pages print where the SDK's docs are. Read the ones the video needs b
 
 A video can be shown in a 3D room, as if filmed on a phone held to a monitor or laptop with the product's interface on it. This works best for demos close to the screen. Start from a ready-made scenery: [3d.md](3d.md).
 
+## Voice first
+
+A line's length is known only once it has sound; any figure before that is an estimate. In a video led by speech, settle the script, generate the voice, change the script until its length is right, then make the picture, timed to the words. Each change to the script makes the voice again, which costs credits.
+
 ## Music and sound effects
 
 - **Music**: write it yourself, or generate a professional track with an AI model for a small number of credits: [ai-media.md](ai-media.md).

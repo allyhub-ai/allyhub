@@ -23,6 +23,6 @@ In a project, `allyhub` runs the project's own CLI, at the version its SDK build
 - `components/`: code pieces share, such as a product's screens.
 - `assets/`: media, data, text and fonts.
 - `sceneries/`: sceneries `allyhub add` adds.
-- `.allyhub/`: this computer's only. `out/` holds renders, `work/` your working files, and `cache/` what the tools rebuild.
+- `.allyhub/`: this computer's only. `out/<item>/` holds renders, `work/` your working files, and `cache/` what the tools rebuild.
 
 Notes you would otherwise have to find again go where your agent keeps its memory. AllyHub's own agent keeps them in `.allyhub/memory/`.
