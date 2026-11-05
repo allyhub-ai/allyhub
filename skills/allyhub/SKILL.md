@@ -3,7 +3,7 @@ name: allyhub
 description: "Know a market and show a product, at scale, with AllyHub: research with real data from social media, ad libraries, e-commerce, app stores and search, then make videos (product demos, explainer videos, launch shorts, UGC shorts, ads, talking heads), decks and carousel posts, docs, sheets, 3D scenes and websites (company sites and landing pages, online stores, blogs, documentation sites, pages made for SEO, AEO and GEO) as code in a project folder, checked, previewed and rendered on this computer. Use when the user mentions AllyHub or its preview, or wants a video, a demo, an explainer, a UGC short, a deck, slides, a carousel, a doc, a sheet, a website, a landing page, an online store, a documentation site, a blog or pages that rank in search and AI answers, or research such as finding users, competitors, ads, posts or keywords."
 license: MIT
 metadata:
-  version: "25"
+  version: "28"
 ---
 
 # AllyHub
@@ -48,7 +48,7 @@ Ready-made components, 3D sceneries and models, and CC0 assets to start from: [r
 You cannot watch a video or open a file as a person does, so AllyHub draws and measures your work from its code, in seconds and without rendering. Use this on everything you make before you hand it over, and judge what it reports yourself.
 
 - `allyhub check` finds errors that must be fixed.
-- `allyhub frames` draws any moment of a video or a deck, or a sheet, as the render draws it.
+- `allyhub frames` draws any moment of a video or a deck, a sheet, or a doc's pages, as the render draws it.
 - `allyhub inspect` reports facts, such as layout, text, contrast, timing and motion.
 - `allyhub audio` says how a video sounds: loudness, the mix, silences and pace.
 
@@ -60,7 +60,7 @@ Research and AI media run on AllyHub's servers and spend the person's credits; a
 
 ## Working
 
-A piece is delivered open in its editor. After `allyhub check`, start `allyhub dev --no-open` in the project and give the person the address. Run `allyhub render` only when they ask for the files.
+A piece is delivered open in its editor. After `allyhub check`, open it with your app's own tool where it has one (Studio's `open`); elsewhere start `allyhub dev --no-open` in the project in the background, once, and give the person the address. In Studio, a person shows what to change with Mark up: tell them so when you hand a piece over, and ask them to circle what a vague request means. Run `allyhub render` only when they ask for the files.
 
 - Starting or entering a project: [references/projects.md](references/projects.md)
 - Before you make anything: [references/working.md](references/working.md)

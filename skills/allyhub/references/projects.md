@@ -2,6 +2,8 @@
 
 A project is a folder that keeps every piece and what they share, so each piece builds on the last. Content needs one, and so do `allyhub voice` and `allyhub add`. Research, AI media, `allyhub upload`, `allyhub skills` and `allyhub add search` do not.
 
+A project has one look (`allyhub.config.ts`'s colours and fonts) and one set of shared components and assets, so it serves one brand: work for several clients or brands goes in a project each, a folder per client.
+
 A **piece** is one thing the project makes for people to see. It is a folder, known by its entry file. Commands and tools call it an **item**.
 
 ## Start one
