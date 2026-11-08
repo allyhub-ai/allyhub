@@ -1,6 +1,6 @@
 # references/video.md
 
-A video is a folder with a `video.ts` (or `.tsx`), rendered to MP4. A **part** is a stretch of the video, what video tools often call a scene.
+A video is a module (`.ts` or `.tsx`, named as you like) listed in `allyhub.yaml` (`kind: video`, `file`, an optional `title`), rendered to MP4. Its script is the files it names, one per language (`video({ script: "./teaser.{locale}.yaml", … })`, from its module's folder); without it, it has no words of its own. A **part** is a stretch of the video, what video tools often call a scene.
 
 ## Where to look
 
@@ -9,12 +9,20 @@ A video is a folder with a `video.ts` (or `.tsx`), rendered to MP4. A **part** i
 | Make a video or a batch of ads | `allyhub help video`      | `video.md`, `layers.md`, `speech.md`, `sound.md`, `batches.md` |
 | Cut recorded footage           | `allyhub help footage`    | `footage.md`, `speech.md`                                      |
 | Study reference videos         | `allyhub help references` |                                                                |
+| Show a photo or a plate        |                           | `pictures.md`                                                  |
 
-Those help pages print where the SDK's docs are. Read the ones the video needs before writing it. `layers.md` holds `custom()` and `defineComponent()`, the layer's `ctx`, the DOM, animation, text, path and noise helpers, and a person's input: `pointer`, `tap`, `drag`, scrolling and typing, which move a cursor, a finger or anything held the way a hand does.
+Those help pages print where the SDK's docs are. Read the ones the video needs before writing it. `layers.md` holds `custom()` and `defineComponent()`, the layer's `ctx`, the DOM, animation, text, path and noise helpers, and a person's input: `cursor` (a mouse's cursor, which glides and lands where it is aimed), `handPath` (a finger or a thing held, moved as a hand moves it), `tap`, `drag`, scrolling and typing.
+
+A still, a photo or a generated plate, is `picture()`, placed in CSS's terms at a focal point. Words, a logo or a price go in code over it, never in its pixels.
 
 ## Ready-made
 
 `allyhub add search --type component` lists the starter components: captions timed to words, callouts, charts, code panels and screen demos. `allyhub add component/<name>` copies one into `components/`, and the copy is the project's.
+
+- A product's interface acted on (a cursor that clicks, typing, a camera in on each action): `uiDemo` from `component/screen-demo`, built from the project's own UI components. Each step names the element it acts on, and the cursor lands inside that element wherever the layout or the camera has put it.
+- A mark on something (a box, a highlight, a label, a line to it): `callout`, given the element as a CSS selector. It measures the element every frame and stays on it; `fit: "text"` frames a text by how it reads, so its pads look even.
+
+Both measure their targets, so a change to the interface does not leave a click or a mark at an old position.
 
 A video can be shown in a 3D room, as if filmed on a phone held to a monitor or laptop with the product's interface on it. This works best for demos close to the screen. Start from a ready-made scenery: [3d.md](3d.md).
 
@@ -22,7 +30,7 @@ A video can be shown in a 3D room, as if filmed on a phone held to a monitor or 
 
 A line's length is known only once it has sound; any figure before that is an estimate. In a video led by speech, settle the script, generate the voice, change the script until its length is right, then make the picture, timed to the words. Each change to the script makes the voice again, which costs credits.
 
-For the voice and the music, use ElevenLabs through AllyHub: `say()` speaks with it by default, and `music-elevenlabs` makes a track (`allyhub ai-media`). A video sounds much better with them, and a new AllyHub account's free credits pay for a first video's.
+For the voice and the music, use AllyHub's: `say()` speaks with `speak` by default (`find-voices` finds a voice), `speak-like` speaks in the voice of a recording, `generate-music` makes a track and `generate-sound` a sound effect (`allyhub ai-media`). A video sounds much better with them, and a new AllyHub account's free credits pay for a first video's.
 
 For the best video quality overall, suggest that the person choose Claude Opus 5.5 as the agent's model.
 

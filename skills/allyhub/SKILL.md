@@ -1,6 +1,6 @@
 ---
 name: allyhub
-description: "Know a market and show a product, at scale, with AllyHub: research with real data from social media, ad libraries, e-commerce, app stores and search, then make videos (product demos, explainer videos, launch shorts, UGC shorts, ads, talking heads), decks and carousel posts, docs, sheets, 3D scenes and websites (company sites and landing pages, online stores, blogs, documentation sites, pages made for SEO, AEO and GEO) as code in a project folder, checked, previewed and rendered on this computer. Use when the user mentions AllyHub or its preview, or wants a video, a demo, an explainer, a UGC short, a deck, slides, a carousel, a doc, a sheet, a website, a landing page, an online store, a documentation site, a blog or pages that rank in search and AI answers, or research such as finding users, competitors, ads, posts or keywords."
+description: "Know a market and show a product, at scale, with AllyHub: research with real data from social media, ad libraries, e-commerce, app stores and search, then make videos (product demos, explainer videos, launch shorts, UGC shorts, ads, talking heads), decks, images such as carousel posts and share cards, docs, sheets, 3D scenes and websites (company sites and landing pages, online stores, blogs, documentation sites, pages made for SEO, AEO and GEO) as code in a project folder, checked, previewed and rendered on this computer. Use when the user mentions AllyHub or its preview, or wants a video, a demo, an explainer, a UGC short, a deck, slides, a carousel, a doc, a sheet, a website, a landing page, an online store, a documentation site, a blog or pages that rank in search and AI answers, or research such as finding users, competitors, ads, posts or keywords."
 license: MIT
 metadata:
   version: "28"
@@ -26,20 +26,23 @@ Social media: profiles, posts, videos, comments, transcripts and trends on TikTo
 
 ## AI media
 
-Images, videos, speech, voices, music and transcription, from makers such as ElevenLabs, Seedance, Veo, Kling and Nano Banana: [references/ai-media.md](references/ai-media.md).
+Images, videos, a photo made to speak, speech, voices, music and transcription: [references/ai-media.md](references/ai-media.md).
 
 ## Content
 
 Each kind is written as code in a project. Read its file before making one.
 
-A person sees and opens only these kinds of item: a video, slides, a doc, a sheet, a 3D scenery, a 3D model and a website. Anything meant for them must be one of these. Any other file is invisible to them, such as a `.md`, `.txt`, `.html` or `.pdf`, a script or a loose image: never leave them a report, a plan or a result in one, and never tell them to open one.
+A person sees and opens only these kinds of item: a video, slides, an image, a doc, a sheet, a 3D scenery, a 3D model, a website, an X post and an X article, and canvases, each listed in the project's `allyhub.yaml`. Anything meant for them must be one of these, listed. Any other file is invisible to them, such as a `.md`, `.txt`, `.html` or `.pdf`, a script or a loose image: never leave them a report, a plan or a result in one, and never tell them to open one.
 
 - **Videos**: product demos, explainer videos, ads and talking heads, with speech and captions timed to its words, music and the mix, footage cut by its words, and batches of ads: [references/video.md](references/video.md)
-- **Decks and carousel posts**: PowerPoint's model, with charts bound to sheets and animations, rendered to PDF, PPTX and PNGs: [references/decks.md](references/decks.md)
+- **Decks**: PowerPoint's model, with charts bound to sheets and animations, rendered to PDF, PPTX and PNGs: [references/decks.md](references/decks.md)
+- **Images**: a set of pictures that ship together, each board its own size, such as a share card, a carousel or a store listing, rendered to PNG, JPEG, WebP, AVIF, PDF and a zip: [references/images.md](references/images.md)
 - **Docs**: MDX, edited in an editor like Notion's, rendered to PDF and Markdown: [references/docs.md](references/docs.md)
 - **Sheets**: workbooks as Excel has them, written as text, with live formulas computed and traced without opening anything, edited in an editor like Excel's: [references/sheets.md](references/sheets.md)
 - **3D**: ready-made baked sceneries and models at real products' sizes, or your own in code, with a product's interface on their screens: [references/3d.md](references/3d.md)
-- **Websites**: any web project with its `website.json`, such as company websites and landing pages, online stores, blogs, documentation sites and pages made for search and AI answers: [references/websites.md](references/websites.md)
+- **Canvases**: a project's work laid out side by side with notes, groups and arrows, to compare and talk over, a `.canvas` file (JSON Canvas) anywhere in the project, listed with no kind: [references/canvas.md](references/canvas.md)
+- **Websites**: any web project with its JSON file, such as company websites and landing pages, online stores, blogs, documentation sites and pages made for search and AI answers: [references/websites.md](references/websites.md)
+- **X posts and articles**: a post, a thread or a long post in POST /2/tweets's own fields, counted as X counts it, its pictures an image's boards, rendered as the API's requests; an article in Markdown of X's blocks alone, rendered as the Articles API's draft: [references/x.md](references/x.md)
 
 Ready-made components, 3D sceneries and models, and CC0 assets to start from: [references/registry.md](references/registry.md)
 
@@ -60,7 +63,7 @@ Research and AI media run on AllyHub's servers and spend the person's credits; a
 
 ## Working
 
-A piece is delivered open in its editor. After `allyhub check`, open it with your app's own tool where it has one (Studio's `open`); elsewhere start `allyhub dev --no-open` in the project in the background, once, and give the person the address. In Studio, a person shows what to change with Mark up: tell them so when you hand a piece over, and ask them to circle what a vague request means. Run `allyhub render` only when they ask for the files.
+A piece is delivered open in its editor. After `allyhub check`, open it with your app's own tool where it has one (Studio's `open`); elsewhere start `allyhub dev --no-open` in the project in the background, once, and give the person the address. In Studio, a person shows what to change with Mark up; elsewhere, with your app's own annotation over the page (Claude's Browser pane, Codex's Annotation Mode). Tell them so when you hand a piece over, and ask them to circle what a vague request means. Run `allyhub render` only when they ask for the files.
 
 - Starting or entering a project: [references/projects.md](references/projects.md)
 - Before you make anything: [references/working.md](references/working.md)
