@@ -1,11 +1,11 @@
 # references/ai-media.md
 
-AI models make images, videos, speech, voices and music, and transcribe audio. They run in the cloud and cost credits.
+AI tools make images, videos, a photo that speaks a recording, speech, voices and music, and transcribe audio. They run in the cloud and cost credits. Each is named for what it does; which model serves it is the cloud's choice.
 
-## Find a model
+## Find a tool
 
-1. `allyhub ai-media` lists the models.
-2. `allyhub help ai-media <tool>` gives a model's options and how its credits are counted.
+1. `allyhub ai-media` lists the tools.
+2. `allyhub help ai-media <tool>` gives its options and how its credits are counted.
 3. `allyhub ai-media <tool>` runs it.
 
 `allyhub help generating` lists the commands of this work.
@@ -16,7 +16,7 @@ A tool whose input takes a URL needs the file online. `allyhub upload <file>` pr
 
 ## Voices in a video
 
-`allyhub voice` makes the voice files a project's `say()` parts need, one per `say()` that has none.
+`allyhub voice` makes the voice files a project's videos need for the lines they speak that have none yet.
 
 ## See and measure what you get
 
