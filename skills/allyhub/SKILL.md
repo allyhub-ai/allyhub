@@ -32,7 +32,7 @@ Images, videos, a photo made to speak, speech, voices, music and transcription: 
 
 Each kind is written as code in a project. Read its file before making one: it says where the SDK's docs for that kind are, which hold how it is written for the version the project builds with.
 
-A person sees and opens only these kinds of item: a video, slides, an image, a doc, a sheet, a 3D scenery, a 3D model, a website, an X post and an X article, and canvases, each listed in the project's `allyhub.yaml`. Anything meant for them must be one of these, listed. Any other file is invisible to them, such as a `.md`, `.txt`, `.html` or `.pdf`, a script or a loose image: never leave them a report, a plan or a result in one, and never tell them to open one.
+A person sees and opens these kinds of item: a video, slides, an image, a doc, a sheet, a 3D scenery, a 3D model, a website, an X post and an X article, and canvases, each listed in the project's `allyhub.yaml`. A report, a plan or a result meant for them is one of these, listed, never a `.md`, `.txt`, `.html` or `.pdf`. A file that is plain by nature (data such as JSON or CSV, a config, a log, subtitles, a picture, a video or a sound) they can see as it is: list it in `allyhub.yaml` with no kind to keep it in front of them, or show it once with your app's own open (Studio's `open`). Any other file is yours alone: never tell them to open one.
 
 - **Videos**: product demos, explainer videos, ads and talking heads, with speech and captions timed to its words, music and the mix, footage cut by its words, and batches of ads: [references/video.md](references/video.md)
 - **Decks**: PowerPoint's model, with charts bound to sheets and animations, rendered to PDF, PPTX and PNGs: [references/decks.md](references/decks.md)
