@@ -32,17 +32,19 @@ Images, videos, a photo made to speak, speech, voices, music and transcription: 
 
 Each kind is written as code in a project. Read its file before making one: it says where the SDK's docs for that kind are, which hold how it is written for the version the project builds with.
 
-A person sees and opens only these kinds of item: a video, slides, an image, a doc, a sheet, a 3D scenery, a 3D model, a website, an X post and an X article, and canvases, each listed in the project's `allyhub.yaml`. Anything meant for them must be one of these, listed. Any other file is invisible to them, such as a `.md`, `.txt`, `.html` or `.pdf`, a script or a loose image: never leave them a report, a plan or a result in one, and never tell them to open one.
+A person sees and opens these kinds of item: a video, slides, an image, a doc, a sheet, a 3D scenery, a 3D model, a website, an X post and an X article, and canvases, each listed in the project's `allyhub.yaml`. A report, a plan or a result meant for them is one of these, listed, never a `.md`, `.txt`, `.html` or `.pdf`. A file that is plain by nature (data such as JSON or CSV, a config, a log, subtitles, a picture, a video or a sound) they can see as it is: list it in `allyhub.yaml` with no kind to keep it in front of them, or show it once with your app's own open (Studio's `open`). Any other file is yours alone: never tell them to open one.
 
 - **Videos**: product demos, explainer videos, ads and talking heads, with speech and captions timed to its words, music and the mix, footage cut by its words, and batches of ads: [references/video.md](references/video.md)
 - **Decks**: PowerPoint's model, with charts bound to sheets and animations, rendered to PDF, PPTX and PNGs: [references/decks.md](references/decks.md)
 - **Images**: a set of pictures that ship together, each board its own size, such as a share card, a carousel or a store listing, rendered to PNG, JPEG, WebP, AVIF, PDF and a zip: [references/images.md](references/images.md)
 - **Docs**: MDX, edited in an editor like Notion's, rendered to PDF and Markdown: [references/docs.md](references/docs.md)
+- **Reports**: a page you write freely in HTML, read on a screen and sent as a link, such as research findings, a review analysis or a KPI review, drawn offline and rendered to one self-contained HTML file, PDF, PNG and Markdown: [references/reports.md](references/reports.md)
 - **Sheets**: workbooks as Excel has them, written as text, with live formulas computed and traced without opening anything, edited in an editor like Excel's: [references/sheets.md](references/sheets.md)
 - **3D**: ready-made baked sceneries and models at real products' sizes, or your own in code, with a product's interface on their screens: [references/3d.md](references/3d.md)
 - **Canvases**: a project's work laid out side by side with notes, groups and arrows, to compare and talk over: [references/canvas.md](references/canvas.md)
 - **Websites**: any web project with its JSON file, such as company websites and landing pages, online stores, blogs, documentation sites and pages made for search and AI answers: [references/websites.md](references/websites.md)
 - **X posts and articles**: a post, a thread or a long post, and an article, in X's own model, checked against what X counts and refuses: [references/x.md](references/x.md)
+- **LinkedIn posts and articles**: a post with pictures, a video, a document (a carousel), a poll or a link, and an article, in LinkedIn's own model, checked against what LinkedIn counts and refuses: [references/linkedin.md](references/linkedin.md)
 
 Ready-made components, 3D sceneries and models, and CC0 assets to start from: [references/registry.md](references/registry.md)
 
