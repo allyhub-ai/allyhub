@@ -39,6 +39,10 @@ npx -y allyhub@latest help
 
 `npx skills update -g` sees only a skill installed with the command above.
 
+## What AllyHub tells AllyHub
+
+The CLI and Studio tell AllyHub how they are used and when they fail, never what you make or say. [TELEMETRY.md](TELEMETRY.md) lists all of it and how to turn it off (`ALLYHUB_TELEMETRY=off`, or `DO_NOT_TRACK=1`).
+
 ## Contributing
 
 We do not take pull requests yet. Issues are welcome.
