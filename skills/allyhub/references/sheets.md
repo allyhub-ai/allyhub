@@ -1,6 +1,6 @@
 # references/sheets.md
 
-A sheet is a workbook as Excel has it, written as text: a YAML file listed in `allyhub.yaml`, its tables' rows in CSV files it names, and optionally code it names that makes sheets from data with openpyxl's API. Formulas stay live. The person edits it in an editor like Excel's. It renders to an Excel workbook with live formulas, PDF, PNG, CSV, Markdown and JSON.
+A sheet is a workbook as Excel has it, written as text: a YAML file listed in `allyhub.yaml`, its tables' rows in CSV files it names, and optionally code it names that makes sheets from data with openpyxl's API. Formulas stay live. The person edits it in an editor like Excel's and exports it as an Excel workbook with live formulas, PDF, CSV or pictures. `allyhub render` also writes its Markdown and JSON.
 
 - `allyhub help sheets` lists the commands in order and prints where the SDK's `sheets.md` is. Read it before writing a sheet.
 - `allyhub sheet capabilities` says what the API holds of openpyxl's, how it differs and which worksheet functions it computes.

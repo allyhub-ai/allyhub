@@ -25,7 +25,7 @@ npx -y allyhub@latest help
 
 The first gives your agent the skill that says what AllyHub does and how to use it. The second fetches AllyHub, which takes a minute or so, and lists what it can do.
 
-Then ask your agent for the work in your own words.
+Then ask your agent for the work in your own words. An agent that installs AllyHub in the middle of a request reads the skill it just added (`~/.agents/skills/allyhub/SKILL.md`) before it goes on, as most apps list a new skill only from their next session.
 
 ## Update
 
