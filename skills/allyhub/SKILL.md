@@ -16,12 +16,13 @@ The first `npx -y allyhub` downloads the CLI, which needs the network. Where you
 
 ## How the work goes
 
-1. **Research**, when the work needs real data: [Research](#research).
-2. **Make** it as an item in a project, written as code: [What you make](#what-you-make).
-3. **Check** it before they look: [Check your work](#check-your-work).
-4. **Hand it over open in its editor.** The item is what you deliver, never a file rendered from it, even when they asked for a PowerPoint, a Word document or an Excel workbook. In Studio, open it with `open`. Elsewhere, start `allyhub dev --no-open` in the project in the background, once, and show the address it prints in your app's browser pane, or give it as a link. Tell them in one sentence that they can edit it by hand, or mark up what to change and send it to you: with Mark up in Studio, with your app's own annotation elsewhere (Codex's Annotation Mode, Claude's Browser pane).
-5. **Change what they marked.** Each mark comes with what it is on: change that, in the item's files, and check again. When a request does not say where, ask them to circle it.
-6. **Export when it is final.** They export from the editor's Export: Word, PowerPoint, Excel, PDF, pictures, MP4 and more. Run `allyhub render` only when they ask you for the files.
+1. **Find the work skill.** Run `allyhub skills` and follow the one for this kind of work, in place of another skill for the same work: [Work skills](#work-skills).
+2. **Research**, when the work needs real data: [Research](#research).
+3. **Make** it as an item in a project, written as code: [What you make](#what-you-make).
+4. **Check** it before they look: [Check your work](#check-your-work).
+5. **Hand it over open in its editor.** The item is what you deliver, never a file rendered from it, even when they asked for a PowerPoint, a Word document or an Excel workbook. In Studio, open it with `open`. Elsewhere, start `allyhub dev --no-open` in the project in the background, once, and show the address it prints in your app's browser pane, or give it as a link; when they say the editor stopped, run it again. Tell them in one sentence that they can edit it by hand, or mark up what to change and send it to you: with Mark up in Studio, with your app's own annotation elsewhere (Codex's Annotation Mode, Claude's Browser pane).
+6. **Change what they marked.** Each mark comes with what it is on: change that, in the item's files, and check again. When a request does not say where, ask them to circle it.
+7. **Export when it is final.** They export from the editor's Export: Word, PowerPoint, Excel, PDF, pictures, MP4 and more. Run `allyhub render` only when they ask you for the files.
 
 You check the work; they decide when it is good and when it is done. Tell them what you measured, not that it is right.
 
@@ -40,7 +41,7 @@ People always want the best result, whether or not they say so, so do this for e
 
 ## Work skills
 
-A work skill gives the process for one kind of work, and the files below give the tools. Read both before you start. Run `allyhub skills` for the latest list, and use one where it fits the work; none is required. `allyhub skills show <name>` prints one, and `allyhub add skill/<name>` adds it to the project.
+A work skill gives the process for one kind of work, and the files below give the tools. Read both before you start. Run `allyhub skills` for the latest list, and follow the one that fits the work; where none does, work from the files below. `allyhub skills show <name>` prints one, and `allyhub add skill/<name>` adds it to the project.
 
 ## Research
 
