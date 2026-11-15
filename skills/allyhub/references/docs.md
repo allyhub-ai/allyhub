@@ -1,6 +1,6 @@
 # references/docs.md
 
-A doc is an MDX file listed in `allyhub.yaml`, which the person edits in an editor like Notion's. It renders to PDF, Word and Markdown.
+A doc is an MDX file listed in `allyhub.yaml`, laid out in pages, which the person edits as blocks, as in Notion, on pages set up as in Word, and exports as Word, PDF or pictures. `allyhub render` also writes its Markdown.
 
 A doc holds more than prose, each drawn in the editor, the PDF and Word: charts drawn from numbers or from a sheet, so they follow the data; equations and diagrams; a picture drawn by code, a project's component placed in the page; footnotes and citations; blocks side by side; contents, numbered figures and tables; and a page set by its front matter (paper, margins, faces, header and footer, a preset, a cover).
 
