@@ -1,6 +1,6 @@
 # references/websites.md
 
-A website is any web project, made with the tools that suit it (Astro, Vite, Next.js, VitePress, plain HTML): a landing page, a company site, an online store, a documentation site, a blog, or pages made to rank in search and be cited in AI answers. AllyHub knows it by a JSON file you write in its folder and list in `allyhub.yaml`, which says how Studio serves it while you make it and how it is built; unlisted, the person never sees the website.
+A website is any web project, made with the tools that suit it (Astro, Vite, Next.js, VitePress, plain HTML): a landing page, a company site, an online store, a documentation site, a blog, or pages made to rank in search and be cited in AI answers. AllyHub knows it by a JSON file you write in its folder and list in `allyhub.yaml`, where the person finds it; the file says how Studio serves it while you make it and how it is built.
 
 - `allyhub help websites` lists the commands and prints where the SDK's `websites.md` is. Read it before writing a website's file.
 - `allyhub skills` lists the work skills, those for kinds of website among them.

@@ -9,4 +9,4 @@ A post's pictures, video and document can be the project's own items: an image's
 
 - `allyhub help linkedin` lists the commands and prints where the SDK's `linkedin.md` is. Read it before writing a post or an article.
 - `allyhub frames` draws a post as LinkedIn's feed shows it, folded at "… more" and opened, and an article as its page shows it; `allyhub inspect` gives what LinkedIn counts. Look with them before handing it over.
-- **Publishing to LinkedIn is not built.** `allyhub render` writes the request LinkedIn's Posts API takes, or a post's text to paste; an article is HTML to paste into LinkedIn's editor (LinkedIn has no API for articles), and its editor copies it for LinkedIn.
+- **To publish**, the person downloads a post's text to paste, or copies an article from its editor to paste into LinkedIn's, and posts it. `allyhub render` also writes the request LinkedIn's Posts API takes, and an article as HTML.

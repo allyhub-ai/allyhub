@@ -1,6 +1,6 @@
 # references/projects.md
 
-A project is a folder that keeps every piece and what they share, so each piece builds on the last. Content needs one, and so do `allyhub voice` and `allyhub add`. Research, AI media, `allyhub upload`, `allyhub skills` and `allyhub add search` do not.
+A project is a folder that keeps every piece and what they share, so each piece builds on the last. Content needs one, and so do `allyhub voice` and `allyhub add`. Research, AI media, `allyhub upload`, `allyhub skills` and `allyhub add search` run anywhere.
 
 A project has one look (`allyhub.config.ts`'s colours and fonts) and one set of shared components and assets, so it serves one brand: work for several clients or brands goes in a project each, a folder per client.
 
@@ -12,7 +12,7 @@ A **piece** is one thing the project makes for people to see: a file of a kind, 
 
 ## Start one
 
-Run `npm create allyhub@latest .`, then `npm install`. A folder that has a `package.json` already is refused.
+Run `npm create allyhub@latest .` in a folder with no `package.json` yet, then `npm install`.
 
 ## Enter one
 
@@ -29,6 +29,6 @@ In a project, `allyhub` runs the project's own CLI, at the version its SDK build
 - `components/`: code pieces share, such as a product's screens.
 - `assets/`: media, data, text and fonts.
 - `sceneries/`: sceneries `allyhub add` adds.
-- `.allyhub/`: this computer's only. `out/<item>/` holds renders, `work/` your working files, and `cache/` what the tools rebuild.
+- `.allyhub/`: this computer's only, where the person does not look. `out/<item>/` holds renders, `work/` your working files, and `cache/` what the tools rebuild.
 
-Notes you would otherwise have to find again go where your agent keeps its memory. AllyHub's own agent keeps them in `.allyhub/memory/`.
+Notes you would otherwise have to find again go where your agent keeps its memory. AllyHub's own agent keeps them in `.agents/memory/`.
