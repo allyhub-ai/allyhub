@@ -13,7 +13,7 @@ A video is a module listed in `allyhub.yaml`, rendered to MP4. Its script, which
 
 Those help pages print where the SDK's docs are. Read the ones the video needs before writing it.
 
-A still, a photo or a generated plate, is placed at a focal point (`pictures.md`). Words, a logo or a price go in code over it, never in its pixels.
+A still, a photo or a generated plate, is placed at a focal point (`pictures.md`). Words, a logo or a price go in code over it, where they stay sharp and editable.
 
 ## Ready-made
 
@@ -22,13 +22,13 @@ A still, a photo or a generated plate, is placed at a focal point (`pictures.md`
 - A product's interface acted on (a cursor that clicks, typing, a camera in on each action): `component/screen-demo`, built from the project's own UI components. Each step names the element it acts on, and the cursor lands inside it wherever the layout or the camera has put it.
 - A mark on something (a box, a highlight, a label, a line to it): `component/callout`, given the element. It measures the element every frame and stays on it.
 
-Both measure their targets, so a change to the interface does not leave a click or a mark at an old position.
+Both measure their targets, so a click or a mark follows the interface as it changes.
 
 A video can be shown in a 3D room, as if filmed on a phone held to a monitor or laptop with the product's interface on it. This works best for demos close to the screen. Start from a ready-made scenery: [3d.md](3d.md).
 
 ## Voice first
 
-A line's length is known only once it has sound; any figure before that is an estimate. In a video led by speech, settle the script, generate the voice, change the script until its length is right, then make the picture, timed to the words. Each change to the script makes the voice again, which costs credits.
+A line's length is measured from its sound. In a video led by speech, settle the script, generate the voice, change the script until its length is right, then make the picture, timed to the words. Each change to the script makes the voice again, which costs credits.
 
 For the voice and the music, use AllyHub's: its cloud tools speak a script in a voice you choose or in the voice of a recording, and make a music track or a sound effect ([ai-media.md](ai-media.md)). A video sounds much better with them, and a new AllyHub account's free credits pay for a first video's.
 
@@ -51,7 +51,7 @@ A style of video, such as a product demo or a UGC short, has its own skill. `all
 | Each cut, with its frames, sound and words                          | `allyhub frames cuts`                                       |
 | The check's facts, by kind, part and time                           | `allyhub inspect`, with `--kind`                            |
 | Layout and every text block                                         | `allyhub inspect layout`                                    |
-| Text against the pixels behind it, which `check` does not measure   | `allyhub inspect contrast`                                  |
+| Text against the pixels behind it (contrast)                        | `allyhub inspect contrast`                                  |
 | Parts, layers, speech and sound, drawn nowhere                      | `allyhub inspect timeline`                                  |
 | Motion, held pictures, joins, flashes and the loop                  | `allyhub inspect motion`, `still`, `seams`, `flash`, `loop` |
 | Loudness, the mix, silences and pace                                | `allyhub audio`                                             |

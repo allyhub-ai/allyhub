@@ -9,4 +9,4 @@ Their pictures and videos can be the project's own items, an image's boards or a
 
 - `allyhub help x` lists the commands and prints where the SDK's `x.md` is. Read it before writing a post or an article.
 - `allyhub frames` draws a post or an article as X shows it once published, and `allyhub inspect` gives what X counts. Look with them before handing it over.
-- **Publishing to X is not built.** `allyhub render` writes the requests X's API takes, or a post's text to paste.
+- **To publish**, the person downloads a post's text to paste, and posts it. `allyhub render` also writes the requests X's API takes.

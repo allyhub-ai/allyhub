@@ -8,6 +8,12 @@ A prompt or an answer, a file's name, path or content, a project's or a piece's 
 
 Nothing is told while you are signed out, and nothing goes anywhere but AllyHub.
 
+## What you ask an agent
+
+When you send a message to an agent in AllyHub Studio while you are signed in, on your computer or in the cloud, AllyHub keeps its words with the turn: the agent's answer, the steps it took (each one's kind, its title, such as "Read videos/launch.ts", and whether it worked, never a file's content or a command's output), when the turn began and ended, how it ended, and how many pieces it changed. We keep it so that we can look into a turn that went wrong, and so that AllyHub can show it to you. It is not telemetry: the setting below does not change it, it is never sent on to an analytics tool, and it is never used to train a model. It is deleted with your account.
+
+To count what people use AllyHub for and how it goes for them, a model AllyHub runs at its own cost reads each message you send and answers a few words: the kind of work it asks for (research on social media, research on a market, a document, media, writing, operating a website for you, a question, or other), the language it is written in, how you sound in it (pleased, neutral, confused or frustrated) and, when confused or frustrated, what about (the result, speed, cost, reaching something, something AllyHub cannot do, or other). The words are kept with the turn and counted with the events of the service; the message's words go to that model through AllyHub's model gateway, as AllyHub's own agent's calls do, and nowhere else.
+
 ## Turning it off
 
 One setting holds for every AllyHub program on the computer. It is `all` unless you change it.
@@ -31,12 +37,28 @@ The environment wins over Studio's setting.
 | `project_opened` | A project was opened in Studio. | `fresh`, `items` |
 | `item_opened` | A piece was put on show in Studio: its kind (a video, a deck, a doc), never which one. | `kind` |
 | `session_started` | A conversation with an agent began. | `agent` |
-| `turn_finished` | An agent finished answering a message: how long it took, how it ended, and how many files it changed of each kind of work. | `agent`, `durationMs`, `ended`, `changed` |
+| `turn_started` | A message was sent to an agent: which agent, never what the message says. | `agent` |
+| `turn_finished` | An agent finished answering a message: how long it took, how it ended, how many files it changed of each kind of work and how many pieces of each kind it made. | `agent`, `durationMs`, `ended`, `changed`, `made` |
 | `job_finished` | Work Studio did ended: an export, a publish, an install, a download. | `what`, `about`, `kind`, `durationMs`, `outcome` |
-| `command_ran` | A command of the allyhub CLI ran: its name, how long it took and its exit code. | `command`, `durationMs`, `exit` |
+| `command_ran` | A command of the allyhub CLI ran: its name, how long it took, its exit code and, where it did not succeed, its failure's code. | `command`, `durationMs`, `exit`, `code` |
 | `refusal_shown` | Studio showed that a call needs credits or a plan. | `code`, `where` |
 
 Each event also says when it happened, which program and version told it, and, where it has them, random ids for the project, the conversation and the turn it was part of.
+
+### On AllyHub's site
+
+AllyHub Studio in your browser, on AllyHub's own site, tells a few of your clicks and the pages you arrive at, each by name: never what a button says, what you typed, or which project, piece or file it was. They are sent to AllyHub's site alone, signed in as you. If your browser sends Global Privacy Control or Do Not Track, it tells none of them; where Studio's page reads the setting above, it tells them only at `all`.
+
+| Event | When | What it carries |
+| --- | --- | --- |
+| `home_product_chosen` | On the console's Home, the action of one of the three ways to use AllyHub was pressed: which way. | `product` |
+| `item_opened_from_sidebar` | A piece or a file was opened from the sidebar by hand: its kind, and a plain file's extension, never which one. | `kind`, `extension` |
+| `file_downloaded` | A file was downloaded from Studio's Download: the piece's kind, the file's format, and whether the computer in the cloud was paused. | `kind`, `format`, `paused` |
+| `share_opened` | Studio's Share panel was opened: the piece's kind. | `kind` |
+| `upgrade_clicked` | An upgrade or buy-credits button was pressed: which of a few places it was in. | `where` |
+| `page_viewed` | One of a few pages was arrived at: the console's Home, AllyHub in the Cloud, or the plan's settings. | `page` |
+| `paywall_shown` | The dialog that offers plans and credits opened: why AllyHub refused (credits, a plan, storage), what kind of thing it refused, and whether a refusal or its reminder opened it. | `reason`, `what`, `trigger` |
+| `checkout_abandoned` | Someone came back from Stripe's payment page without paying: what it was for (a plan, credits, a card) and, when they answered, which of a few reasons stopped them. | `what`, `reason` |
 
 ## Error reports
 
