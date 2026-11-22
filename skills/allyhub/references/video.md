@@ -60,6 +60,6 @@ A style of video, such as a product demo or a UGC short, has its own skill. `all
 
 ## Costs
 
-Rendering runs on this computer and costs no credits. AI media does: `allyhub help ai-media <tool>` says how a model counts them, such as credits per second of video, so work out a clip's cost from its length before generating it.
+Rendering runs on this computer and costs no credits. AI media does: `allyhub help ai-media <tool>` says how a model counts them, such as credits per second of video.
 
 `allyhub inspect combos` gives a batch's combos and how many part renders they take.

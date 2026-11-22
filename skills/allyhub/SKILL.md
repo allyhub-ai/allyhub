@@ -106,7 +106,7 @@ Each kind's file above lists what measures it.
 
 ## Credits
 
-Research and AI media run on AllyHub's servers and spend the person's credits; a failed call is free.<!-- outside: cloud --> If a command says they are signed out, ask them to sign in, as For the best result says.<!-- /outside --> Before a large run, tell them what it will cost and ask.
+Research and AI media run on AllyHub's servers and spend the person's credits; a failed call is free.<!-- outside: cloud --> If a command says they are signed out, ask them to sign in, as For the best result says.<!-- /outside --> After a task whose tool calls cost 100 credits or more, tell the person what they cost.
 
 ## More
 
