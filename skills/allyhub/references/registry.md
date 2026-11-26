@@ -1,6 +1,6 @@
 # references/registry.md
 
-The registry holds ready-made things a project copies in and owns from then on. Look here before you build one yourself.
+The registry holds ready-made things a project copies in and owns from then on.
 
 ## Find
 

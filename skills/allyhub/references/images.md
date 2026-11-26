@@ -9,4 +9,4 @@ An image is any picture, or a set of pictures that ship together: a photo to cha
 
 ## See and measure
 
-`allyhub frames <image>` draws its boards as the render draws them, and `allyhub inspect <image>` gives their facts: each board, a layer compared across boards, words a box does not hold, contrast and text layout.
+`allyhub frames <image>` draws its boards, and `allyhub inspect <image>` gives their facts: each board, a layer compared across boards, words a box does not hold, contrast and text layout.

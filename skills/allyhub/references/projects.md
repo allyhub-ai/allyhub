@@ -1,12 +1,12 @@
 # references/projects.md
 
-A project is a folder that keeps every piece and what they share, so each piece builds on the last. Content needs one, and so do `allyhub voice` and `allyhub add`. Research, AI media, `allyhub upload`, `allyhub skills` and `allyhub add search` run anywhere.
+A project is a folder that keeps every piece and what they share. Content needs one, and so do `allyhub voice` and `allyhub add`. Research, AI media, `allyhub upload`, `allyhub skills` and `allyhub add search` run anywhere.
 
 A project has one look (`allyhub.config.ts`'s colours and fonts) and one set of shared components and assets, so it serves one brand: work for several clients or brands goes in a project each, a folder per client.
 
 A **piece** is one thing the project makes for people to see: a file of a kind, listed in `allyhub.yaml` at the project's root. Commands and tools call it an **item**. Name and place your files as you like: the list is what the person sees, in its order, under its headings.
 
-- List each piece you make for the person when you make it. A file not listed (a helper, a draft, a scenery a video imports) is yours alone.
+- A file `allyhub.yaml` does not list (a helper, a draft, a scenery a video imports) is not shown to the person.
 - A piece names the other files it uses, such as its script, so pieces share a folder freely.
 - The SDK's `project.md` says how the list and a piece's files are written. `allyhub check` reports what is wrong with the list.
 
@@ -29,6 +29,6 @@ In a project, `allyhub` runs the project's own CLI, at the version its SDK build
 - `components/`: code pieces share, such as a product's screens.
 - `assets/`: media, data, text and fonts.
 - `sceneries/`: sceneries `allyhub add` adds.
-- `.allyhub/`: this computer's only, where the person does not look. `out/<item>/` holds renders, `work/` your working files, and `cache/` what the tools rebuild.
+- `.allyhub/`: this computer's only, where the person does not look. `work/` holds your working files and `cache/` what the tools rebuild.
 
 Notes you would otherwise have to find again go where your agent keeps its memory. AllyHub's own agent keeps them in `.agents/memory/`.
