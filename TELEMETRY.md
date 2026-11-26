@@ -56,6 +56,9 @@ AllyHub Studio in your browser, on AllyHub's own site, tells a few of your click
 | `file_downloaded` | A file was downloaded from Studio's Download: the piece's kind, the file's format, and whether the computer in the cloud was paused. | `kind`, `format`, `paused` |
 | `share_opened` | Studio's Share panel was opened: the piece's kind. | `kind` |
 | `upgrade_clicked` | An upgrade or buy-credits button was pressed: which of a few places it was in. | `where` |
+| `plan_chosen` | A plan's button was pressed on the plan page: which plan, monthly or yearly, whether it changes a plan already paid for, and whether the page was in Settings or the paywall. | `plan`, `interval`, `change`, `where` |
+| `prompt_prefilled` | The composer opened with a prompt from a link (a tool page's Get started): whether it has blanks to fill in, and which tool page it came from. Never its words. | `blanks`, `from` |
+| `welcome_example_pressed` | In the first project, one of the welcome's examples was pressed: its number as shown. Never its words. | `index` |
 | `page_viewed` | One of a few pages was arrived at: the console's Home, AllyHub in the Cloud, or the plan's settings. | `page` |
 | `paywall_shown` | The dialog that offers plans and credits opened: why AllyHub refused (credits, a plan, storage), what kind of thing it refused, and whether a refusal or its reminder opened it. | `reason`, `what`, `trigger` |
 | `checkout_abandoned` | Someone came back from Stripe's payment page without paying: what it was for (a plan, credits, a card) and, when they answered, which of a few reasons stopped them. | `what`, `reason` |

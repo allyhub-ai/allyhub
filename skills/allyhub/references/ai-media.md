@@ -12,7 +12,7 @@ AI tools make images, videos, a photo that speaks a recording, speech, voices an
 
 ## Files as input
 
-A tool whose input takes a URL needs the file online. `allyhub upload <file>` prints a signed URL for a presenter photo, speech audio or a reference clip. The URL works for a few hours.
+A tool whose input takes a URL needs the file online. `allyhub upload <file>` prints a signed URL for a presenter photo, speech audio or a reference clip. The URL works for 24 hours.
 
 ## Voices in a video
 
@@ -20,9 +20,6 @@ A tool whose input takes a URL needs the file online. `allyhub upload <file>` pr
 
 ## See and measure what you get
 
-Look at what a model made before you use it.
-
-- `allyhub frames <file> --at 0,1,2` draws a video file's frames.
 - `allyhub audio <file>` measures a sound or video file alone.
 - `allyhub frames compare` says how a picture differs from a reference, as numbers.
 
