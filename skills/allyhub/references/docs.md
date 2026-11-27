@@ -4,9 +4,11 @@ A doc is an MDX file listed in `allyhub.yaml`, laid out in pages, which the pers
 
 A doc holds more than prose, each drawn in the editor, the PDF and Word: charts drawn from numbers or from a sheet, so they follow the data; equations and diagrams; a picture drawn by code, a project's component placed in the page; footnotes and citations; blocks side by side; contents, numbered figures and tables; and a page set by its front matter (paper, margins, faces, header and footer, a preset, a cover).
 
-- `allyhub help docs` lists the commands in order and prints where the SDK's `docs.md` is. Read it before writing a doc.
+A doc should use charts and blocks wherever appropriate to create rich visualization. The SDK's `docs.md` and `blocks.md` list the blocks a doc draws; a figure none of them draws is a component you write (`<Component>`).
+
+- `allyhub help docs` lists the commands and prints where the SDK's `docs.md` is. Read it before writing a doc.
 - A doc is what a person edits, comments on, prints or sends as Word. A page meant to be read on screen, with interaction or a layout of its own, is a website.
 
 ## See and measure
 
-`allyhub check` finds errors. `allyhub frames <doc>` draws its pages as they print and says how many there are; `allyhub inspect pages <doc>` measures them: the space left at each page's foot, what breaks over a page, headings near a foot, what runs past the column.
+`allyhub check` finds errors. Don't render, screenshot or export a doc to see how it looks unless the person asks.
