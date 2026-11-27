@@ -9,6 +9,12 @@ Cloud tools return data, not pages. They need no project.
 3. `allyhub help <group> <tool>` gives a tool's options and how its credits are counted.
 4. `allyhub <group> <tool>` runs it.
 
+## Budget
+
+Cloud tool calls for research should be capped at 100 credits, unless the person explicitly asked for more.
+
+Never look items up one by one to find the few that match: most of those calls find nothing, and together they spend many credits for nothing.
+
 ## What each group holds
 
 The catalog grows, so `allyhub <group>` is what there is now.
