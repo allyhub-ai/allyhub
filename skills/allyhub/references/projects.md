@@ -12,7 +12,9 @@ A **piece** is one thing the project makes for people to see: a file of a kind, 
 
 ## Start one
 
-Run `npm create allyhub@latest .` in a folder with no `package.json` yet, then `npm install`.
+A folder with an `allyhub.yaml` is a project. Its code's `@allyhub/sdk` (and three.js) is the one `allyhub` brings: nothing is installed for it. A package of another that its code imports is installed with `npm install <package>`.<!-- outside: studio -->
+
+`npm create allyhub@latest .` makes the folder a project: its `allyhub.yaml`, `AGENTS.md`, `CLAUDE.md` and `.gitignore`, nothing installed. `npm create allyhub@latest . -- --install`, then `npm install`, holds it to one AllyHub version, installed in it.<!-- /outside -->
 
 ## Enter one
 
@@ -20,7 +22,7 @@ Read its `AGENTS.md` first: the project's conventions are its own. Its `allyhub.
 
 ## Its CLI and SDK
 
-In a project, `allyhub` runs the project's own CLI, at the version its SDK builds with, however it is started. `allyhub help` prints where that SDK's docs are.
+`allyhub help` prints where the SDK's docs are.<!-- outside: studio --> In a project that installed AllyHub, `allyhub` runs the project's own CLI, at the version its SDK builds with, however it is started.<!-- /outside -->
 
 `allyhub add skill/<name>` puts a skill in `.agents/skills/`, linked from `.claude/skills/`, so every later session has it.
 

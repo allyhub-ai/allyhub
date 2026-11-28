@@ -35,10 +35,6 @@ AllyHub's cloud tools speak a script in a voice you choose or in the voice of a 
 - **Music**: write it yourself, or generate a track with `generate-music`: [ai-media.md](ai-media.md).
 - **Sound effects**: the built-in ones, your own audio files or generated ones, as the SDK's `sound.md` says.
 
-## Styles
-
-A style of video, such as a product demo or a UGC short, has its own skill. `allyhub skills` lists them and `allyhub skills show <name>` prints one.
-
 ## See and measure
 
 | To see                                                              | Run                                                   |
